@@ -56,6 +56,7 @@
             this.drives_box.Name = "drives_box";
             this.drives_box.Size = new System.Drawing.Size(241, 21);
             this.drives_box.TabIndex = 1;
+            this.drives_box.SelectedIndexChanged += new System.EventHandler(this.drives_box_SelectedIndexChanged);
             // 
             // fileFolder_box
             // 
@@ -152,6 +153,7 @@
             this.Controls.Add(this.drive_lbl);
             this.Name = "SanityArchive";
             this.Text = "Sanity Archive";
+            this.Load += new System.EventHandler(this.SanityArchive_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

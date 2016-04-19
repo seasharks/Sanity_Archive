@@ -25,12 +25,33 @@ namespace Sanity_Archive
 
         }
 
+        #region Directory and File Browser
+
         private void SanityArchive_Load(object sender, EventArgs e)
         {
             DriveInfo[] drives = DriveInfo.GetDrives();
             drives_box.Items.AddRange(drives);
-
         }
-        
+
+        private void drives_box_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                fileFolder_box.Items.Clear();
+                DirectoryInfo selectedDirectory = new DirectoryInfo(drives_box.Text);
+
+                DirectoryInfo[] containedDirs = selectedDirectory.GetDirectories();
+                FileInfo[] containedFiles = selectedDirectory.GetFiles();
+
+                fileFolder_box.Items.AddRange(containedDirs);
+                fileFolder_box.Items.AddRange(containedFiles);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        #endregion
     }
 }
