@@ -56,15 +56,19 @@
             // 
             // listBox1
             // 
+            this.listBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.listBox1.FormattingEnabled = true;
             this.listBox1.Location = new System.Drawing.Point(16, 43);
             this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(281, 121);
+            this.listBox1.Size = new System.Drawing.Size(281, 147);
             this.listBox1.TabIndex = 2;
             // 
             // encryption_bttn
             // 
-            this.encryption_bttn.Location = new System.Drawing.Point(13, 177);
+            this.encryption_bttn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.encryption_bttn.Location = new System.Drawing.Point(13, 197);
             this.encryption_bttn.Name = "encryption_bttn";
             this.encryption_bttn.Size = new System.Drawing.Size(139, 23);
             this.encryption_bttn.TabIndex = 3;
@@ -73,7 +77,8 @@
             // 
             // compression_bttn
             // 
-            this.compression_bttn.Location = new System.Drawing.Point(158, 177);
+            this.compression_bttn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.compression_bttn.Location = new System.Drawing.Point(158, 197);
             this.compression_bttn.Name = "compression_bttn";
             this.compression_bttn.Size = new System.Drawing.Size(139, 23);
             this.compression_bttn.TabIndex = 4;
@@ -82,7 +87,8 @@
             // 
             // search_bttn
             // 
-            this.search_bttn.Location = new System.Drawing.Point(158, 206);
+            this.search_bttn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.search_bttn.Location = new System.Drawing.Point(158, 226);
             this.search_bttn.Name = "search_bttn";
             this.search_bttn.Size = new System.Drawing.Size(139, 23);
             this.search_bttn.TabIndex = 6;
@@ -91,7 +97,8 @@
             // 
             // attributes_bttn
             // 
-            this.attributes_bttn.Location = new System.Drawing.Point(13, 206);
+            this.attributes_bttn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.attributes_bttn.Location = new System.Drawing.Point(13, 226);
             this.attributes_bttn.Name = "attributes_bttn";
             this.attributes_bttn.Size = new System.Drawing.Size(139, 23);
             this.attributes_bttn.TabIndex = 5;
