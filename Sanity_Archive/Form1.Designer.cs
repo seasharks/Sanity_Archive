@@ -108,6 +108,7 @@
             // 
             // size_lbl
             // 
+            this.size_lbl.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.size_lbl.AutoSize = true;
             this.size_lbl.Location = new System.Drawing.Point(16, 225);
             this.size_lbl.Name = "size_lbl";
@@ -128,6 +129,7 @@
             this.Controls.Add(this.fileFolder_box);
             this.Controls.Add(this.drives_box);
             this.Controls.Add(this.drive);
+            this.MinimumSize = new System.Drawing.Size(330, 250);
             this.Name = "Form1";
             this.Text = "Form1";
             this.ResumeLayout(false);
