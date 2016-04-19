@@ -12,9 +12,16 @@ namespace Sanity_Archive
 {
     public partial class SanityArchive : Form
     {
+        string currentPath;
+
         public SanityArchive()
         {
             InitializeComponent();
+        }
+
+        private void attributes_bttn_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
