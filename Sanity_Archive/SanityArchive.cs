@@ -10,9 +10,9 @@ using System.Windows.Forms;
 
 namespace Sanity_Archive
 {
-    public partial class Form1 : Form
+    public partial class SanityArchive : Form
     {
-        public Form1()
+        public SanityArchive()
         {
             InitializeComponent();
         }

@@ -1,6 +1,6 @@
 ﻿namespace Sanity_Archive
 {
-    partial class Form1
+    partial class SanityArchive
     {
         /// <summary>
         /// Required designer variable.
@@ -108,7 +108,6 @@
             // 
             // size_lbl
             // 
-            this.size_lbl.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.size_lbl.AutoSize = true;
             this.size_lbl.Location = new System.Drawing.Point(16, 225);
             this.size_lbl.Name = "size_lbl";
@@ -116,7 +115,7 @@
             this.size_lbl.TabIndex = 7;
             this.size_lbl.Text = "0.0 kB/0.0 kB 0/0 files 0/0 folders";
             // 
-            // Form1
+            // SanityArchive
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -129,9 +128,8 @@
             this.Controls.Add(this.fileFolder_box);
             this.Controls.Add(this.drives_box);
             this.Controls.Add(this.drive);
-            this.MinimumSize = new System.Drawing.Size(330, 250);
-            this.Name = "Form1";
-            this.Text = "Form1";
+            this.Name = "SanityArchive";
+            this.Text = "Sanity Archive";
             this.ResumeLayout(false);
             this.PerformLayout();
 
