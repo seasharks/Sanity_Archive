@@ -27,6 +27,24 @@ namespace Sanity_Archive
 
         #region Directory and File Browser
 
+        private void FillFileFolderBox(string path)
+        // Fill fileFolder_box with folder and file items found under the given path
+        {
+            fileFolder_box.Items.Clear();
+            DirectoryInfo selectedDirectory = new DirectoryInfo(path);
+            currentPath = selectedDirectory.ToString();
+
+            DirectoryInfo[] containedDirs = selectedDirectory.GetDirectories();
+            if (path.Length > 3)
+            {
+                fileFolder_box.Items.Add("..");
+            }
+            FileInfo[] containedFiles = selectedDirectory.GetFiles();
+
+            fileFolder_box.Items.AddRange(containedDirs);
+            fileFolder_box.Items.AddRange(containedFiles);
+        }
+
         private void SanityArchive_Load(object sender, EventArgs e)
         {
             DriveInfo[] drives = DriveInfo.GetDrives();
@@ -37,14 +55,7 @@ namespace Sanity_Archive
         {
             try
             {
-                fileFolder_box.Items.Clear();
-                DirectoryInfo selectedDirectory = new DirectoryInfo(drives_box.Text);
-
-                DirectoryInfo[] containedDirs = selectedDirectory.GetDirectories();
-                FileInfo[] containedFiles = selectedDirectory.GetFiles();
-
-                fileFolder_box.Items.AddRange(containedDirs);
-                fileFolder_box.Items.AddRange(containedFiles);
+                FillFileFolderBox(drives_box.Text);
             }
             catch (Exception ex)
             {
@@ -52,6 +63,33 @@ namespace Sanity_Archive
             }
         }
 
+
+        private void fileFolder_box_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            int index = fileFolder_box.IndexFromPoint(e.Location);
+            if (index != System.Windows.Forms.ListBox.NoMatches)
+            {
+                string clickedItemPath = currentPath + "/" + fileFolder_box.SelectedItem.ToString();
+                FileAttributes attr = File.GetAttributes(@clickedItemPath);
+                if ((attr & FileAttributes.Directory) == FileAttributes.Directory)
+                {
+                    try
+                    {
+                        FillFileFolderBox(clickedItemPath);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message);
+                    }
+                }
+                else
+                {
+                    // check if text file and open it in new window
+                }
+            }
+        }
+
         #endregion
+
     }
 }

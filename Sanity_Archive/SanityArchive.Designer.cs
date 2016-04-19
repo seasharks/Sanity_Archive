@@ -69,6 +69,7 @@
             this.fileFolder_box.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
             this.fileFolder_box.Size = new System.Drawing.Size(281, 186);
             this.fileFolder_box.TabIndex = 2;
+            this.fileFolder_box.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.fileFolder_box_MouseDoubleClick);
             // 
             // encryption_bttn
             // 
