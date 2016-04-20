@@ -28,65 +28,91 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
-            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.filename_textbox = new System.Windows.Forms.TextBox();
+            this.path = new System.Windows.Forms.Label();
+            this.search_button = new System.Windows.Forms.Button();
+            this.path_textbox = new System.Windows.Forms.TextBox();
             this.search_result_box = new System.Windows.Forms.ListBox();
+            this.filename = new System.Windows.Forms.Label();
+            this.brows_button = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
-            // textBox1
+            // filename_textbox
             // 
-            this.textBox1.Location = new System.Drawing.Point(93, 12);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(179, 20);
-            this.textBox1.TabIndex = 0;
+            this.filename_textbox.Location = new System.Drawing.Point(70, 12);
+            this.filename_textbox.Name = "filename_textbox";
+            this.filename_textbox.Size = new System.Drawing.Size(202, 20);
+            this.filename_textbox.TabIndex = 0;
             // 
-            // label1
+            // path
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(58, 46);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(29, 13);
-            this.label1.TabIndex = 1;
-            this.label1.Text = "Path";
+            this.path.AutoSize = true;
+            this.path.Location = new System.Drawing.Point(12, 46);
+            this.path.Name = "path";
+            this.path.Size = new System.Drawing.Size(32, 13);
+            this.path.TabIndex = 1;
+            this.path.Text = "Path:";
             // 
-            // button1
+            // search_button
             // 
-            this.button1.Location = new System.Drawing.Point(12, 10);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 2;
-            this.button1.Text = "Search";
-            this.button1.UseVisualStyleBackColor = true;
+            this.search_button.Location = new System.Drawing.Point(278, 9);
+            this.search_button.Name = "search_button";
+            this.search_button.Size = new System.Drawing.Size(75, 23);
+            this.search_button.TabIndex = 2;
+            this.search_button.Text = "Search";
+            this.search_button.UseVisualStyleBackColor = true;
+            this.search_button.Click += new System.EventHandler(this.search_button_Click);
             // 
-            // textBox2
+            // path_textbox
             // 
-            this.textBox2.Location = new System.Drawing.Point(93, 43);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(179, 20);
-            this.textBox2.TabIndex = 3;
+            this.path_textbox.Location = new System.Drawing.Point(70, 45);
+            this.path_textbox.Name = "path_textbox";
+            this.path_textbox.ReadOnly = true;
+            this.path_textbox.Size = new System.Drawing.Size(202, 20);
+            this.path_textbox.TabIndex = 3;
             // 
             // search_result_box
             // 
             this.search_result_box.FormattingEnabled = true;
             this.search_result_box.Location = new System.Drawing.Point(12, 71);
             this.search_result_box.Name = "search_result_box";
-            this.search_result_box.Size = new System.Drawing.Size(260, 186);
+            this.search_result_box.Size = new System.Drawing.Size(341, 173);
             this.search_result_box.TabIndex = 4;
+            // 
+            // filename
+            // 
+            this.filename.AutoSize = true;
+            this.filename.Location = new System.Drawing.Point(12, 14);
+            this.filename.Name = "filename";
+            this.filename.Size = new System.Drawing.Size(52, 13);
+            this.filename.TabIndex = 5;
+            this.filename.Text = "Filename:";
+            // 
+            // brows_button
+            // 
+            this.brows_button.Location = new System.Drawing.Point(278, 43);
+            this.brows_button.Name = "brows_button";
+            this.brows_button.Size = new System.Drawing.Size(75, 23);
+            this.brows_button.TabIndex = 6;
+            this.brows_button.Text = "Browse";
+            this.brows_button.UseVisualStyleBackColor = true;
+            this.brows_button.Click += new System.EventHandler(this.Browse_Click);
             // 
             // Search
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(284, 267);
+            this.ClientSize = new System.Drawing.Size(367, 254);
+            this.Controls.Add(this.brows_button);
+            this.Controls.Add(this.filename);
             this.Controls.Add(this.search_result_box);
-            this.Controls.Add(this.textBox2);
-            this.Controls.Add(this.button1);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.path_textbox);
+            this.Controls.Add(this.search_button);
+            this.Controls.Add(this.path);
+            this.Controls.Add(this.filename_textbox);
             this.Name = "Search";
             this.Text = "Search";
+            this.Load += new System.EventHandler(this.Search_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -94,10 +120,12 @@
 
         #endregion
 
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.TextBox filename_textbox;
+        private System.Windows.Forms.Label path;
+        private System.Windows.Forms.Button search_button;
+        private System.Windows.Forms.TextBox path_textbox;
         private System.Windows.Forms.ListBox search_result_box;
+        private System.Windows.Forms.Label filename;
+        private System.Windows.Forms.Button brows_button;
     }
 }

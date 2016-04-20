@@ -23,5 +23,11 @@ namespace Sanity_Archive
         {
 
         }
+
+        private void search_bttn_Click(object sender, EventArgs e)
+        {
+            Search s = new Search();
+            s.Show();
+        }
     }
 }
