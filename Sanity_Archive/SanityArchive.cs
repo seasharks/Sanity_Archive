@@ -49,7 +49,10 @@ namespace Sanity_Archive
         private void SanityArchive_Load(object sender, EventArgs e)
         {
             DriveInfo[] drives = DriveInfo.GetDrives();
-            drives_box.Items.AddRange(drives);
+            foreach (var drive in drives)
+            {
+                drives_box.Items.Add(drive.Name + " " + drive.DriveType.ToString());
+            }
             drives_box.SelectedIndex = 0;
         }
 
@@ -57,7 +60,7 @@ namespace Sanity_Archive
         {
             try
             {
-                FillFileFolderBox(drives_box.Text);
+                FillFileFolderBox(drives_box.Text.Substring(0, 3));
                 path_box.Text = currentPath;
             }
             catch (Exception ex)
