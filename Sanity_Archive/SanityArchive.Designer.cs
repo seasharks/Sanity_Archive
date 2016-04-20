@@ -90,6 +90,7 @@
             this.compression_bttn.TabIndex = 4;
             this.compression_bttn.Text = "Compress/Decompress";
             this.compression_bttn.UseVisualStyleBackColor = true;
+            this.compression_bttn.Click += new System.EventHandler(this.compression_bttn_Click);
             // 
             // search_bttn
             // 

@@ -141,5 +141,9 @@ namespace Sanity_Archive
 
         #endregion
 
+        private void compression_bttn_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
