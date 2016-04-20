@@ -65,6 +65,7 @@
             this.fileFolder_box.FormattingEnabled = true;
             this.fileFolder_box.Location = new System.Drawing.Point(16, 69);
             this.fileFolder_box.Name = "fileFolder_box";
+            this.fileFolder_box.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
             this.fileFolder_box.Size = new System.Drawing.Size(281, 186);
             this.fileFolder_box.TabIndex = 2;
             // 
