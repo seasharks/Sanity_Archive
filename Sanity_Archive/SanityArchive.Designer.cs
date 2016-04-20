@@ -56,6 +56,7 @@
             this.drives_box.Name = "drives_box";
             this.drives_box.Size = new System.Drawing.Size(241, 21);
             this.drives_box.TabIndex = 1;
+            this.drives_box.SelectedIndexChanged += new System.EventHandler(this.drives_box_SelectedIndexChanged);
             // 
             // fileFolder_box
             // 
@@ -68,6 +69,7 @@
             this.fileFolder_box.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
             this.fileFolder_box.Size = new System.Drawing.Size(281, 186);
             this.fileFolder_box.TabIndex = 2;
+            this.fileFolder_box.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.fileFolder_box_MouseDoubleClick);
             // 
             // encryption_bttn
             // 
@@ -88,6 +90,7 @@
             this.compression_bttn.TabIndex = 4;
             this.compression_bttn.Text = "Compress/Decompress";
             this.compression_bttn.UseVisualStyleBackColor = true;
+            this.compression_bttn.Click += new System.EventHandler(this.compression_bttn_Click);
             // 
             // search_bttn
             // 
@@ -153,6 +156,7 @@
             this.Controls.Add(this.drive_lbl);
             this.Name = "SanityArchive";
             this.Text = "Sanity Archive";
+            this.Load += new System.EventHandler(this.SanityArchive_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
