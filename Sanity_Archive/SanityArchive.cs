@@ -45,32 +45,7 @@ namespace Sanity_Archive
         ​
         -----------------------------------------------------------------------------*/
         /*] END */
-
-        private void FillFileFolderBox(string path)
-        // Fill fileFolder_box with folder and file items found under the given path
-        {
-            fileFolder_box.Items.Clear();
-            DirectoryInfo selectedDirectory = new DirectoryInfo(path);
-            currentPath = selectedDirectory.ToString();
-
-            DirectoryInfo[] containedDirs = selectedDirectory.GetDirectories();
-            if (new DirectoryInfo(path).Parent != null)
-            {
-                fileFolder_box.Items.Add("..");
-            }
-
-            foreach (DirectoryInfo dir in containedDirs)
-            {
-                if (dir.Attributes != FileAttributes.System
-                && dir.Attributes != FileAttributes.Hidden
-                && !dir.ToString().StartsWith("$"))
-                    fileFolder_box.Items.Add(dir.ToString() + "\\");
-            }
-
-            FileInfo[] containedFiles = selectedDirectory.GetFiles();
-            fileFolder_box.Items.AddRange(containedFiles);
-        }
-
+        
         private void SanityArchive_Load(object sender, EventArgs e)
         {
             DriveInfo[] drives = DriveInfo.GetDrives();
@@ -136,7 +111,32 @@ namespace Sanity_Archive
             }
         }
 
-#endregion
+        private void FillFileFolderBox(string path)
+        // Fill fileFolder_box with folder and file items found under the given path
+        {
+            fileFolder_box.Items.Clear();
+            DirectoryInfo selectedDirectory = new DirectoryInfo(path);
+            currentPath = selectedDirectory.ToString();
+
+            DirectoryInfo[] containedDirs = selectedDirectory.GetDirectories();
+            if (new DirectoryInfo(path).Parent != null)
+            {
+                fileFolder_box.Items.Add("..");
+            }
+
+            foreach (DirectoryInfo dir in containedDirs)
+            {
+                if (dir.Attributes != FileAttributes.System
+                && dir.Attributes != FileAttributes.Hidden
+                && !dir.ToString().StartsWith("$"))
+                    fileFolder_box.Items.Add(dir.ToString() + "\\");
+            }
+
+            FileInfo[] containedFiles = selectedDirectory.GetFiles();
+            fileFolder_box.Items.AddRange(containedFiles);
+        }
+
+        #endregion
 
     }
 }
