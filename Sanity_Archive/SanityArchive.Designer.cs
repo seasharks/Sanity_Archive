@@ -78,6 +78,7 @@
             this.encryption_bttn.TabIndex = 3;
             this.encryption_bttn.Text = "Encrypt/Decrypt";
             this.encryption_bttn.UseVisualStyleBackColor = true;
+            this.encryption_bttn.Click += new System.EventHandler(this.encryption_bttn_Click);
             // 
             // compression_bttn
             // 
