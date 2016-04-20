@@ -35,13 +35,20 @@ namespace Sanity_Archive
             currentPath = selectedDirectory.ToString();
 
             DirectoryInfo[] containedDirs = selectedDirectory.GetDirectories();
-            if (path.Length > 3)
+            if (new DirectoryInfo(path).Parent != null)
             {
                 fileFolder_box.Items.Add("..");
             }
-            FileInfo[] containedFiles = selectedDirectory.GetFiles();
 
-            fileFolder_box.Items.AddRange(containedDirs);
+            foreach (DirectoryInfo dir in containedDirs)
+            {
+                if (dir.Attributes != FileAttributes.System
+                && dir.Attributes != FileAttributes.Hidden
+                && !dir.ToString().StartsWith("$"))
+                    fileFolder_box.Items.Add(dir.ToString() + "\\");
+            }
+
+            FileInfo[] containedFiles = selectedDirectory.GetFiles();
             fileFolder_box.Items.AddRange(containedFiles);
         }
 
@@ -49,6 +56,7 @@ namespace Sanity_Archive
         {
             DriveInfo[] drives = DriveInfo.GetDrives();
             drives_box.Items.AddRange(drives);
+            drives_box.SelectedIndex = 0;
         }
 
         private void drives_box_SelectedIndexChanged(object sender, EventArgs e)
@@ -66,25 +74,43 @@ namespace Sanity_Archive
 
         private void fileFolder_box_MouseDoubleClick(object sender, MouseEventArgs e)
         {
+            // checks if the doubleclicked area is surely an item of fileFolder_box
+            // not sure how it works, found on stackoverflow
             int index = fileFolder_box.IndexFromPoint(e.Location);
             if (index != System.Windows.Forms.ListBox.NoMatches)
             {
-                string clickedItemPath = currentPath + "/" + fileFolder_box.SelectedItem.ToString();
-                FileAttributes attr = File.GetAttributes(@clickedItemPath);
-                if ((attr & FileAttributes.Directory) == FileAttributes.Directory)
+                try
                 {
-                    try
+                    // get the path of the doubleclicked folder or file
+                    string clickedItemPath;
+                    if (fileFolder_box.SelectedItem.ToString() == "..")
+                    {
+                        string currentPathWithoutEndingSlash = currentPath.Remove(currentPath.Length - 1);
+                        DirectoryInfo parentOfCurrentDir = Directory.GetParent(currentPathWithoutEndingSlash);
+                        clickedItemPath = parentOfCurrentDir.ToString() + "\\";
+                    }
+                    else 
+                    { 
+                        clickedItemPath = currentPath + fileFolder_box.SelectedItem.ToString();
+                    }
+
+                    // go to or open the doubleclicked folder or file
+                    FileAttributes attr = File.GetAttributes(@clickedItemPath);
+                    if ((attr & FileAttributes.Directory) == FileAttributes.Directory)
                     {
                         FillFileFolderBox(clickedItemPath);
                     }
-                    catch (Exception ex)
+                    else
                     {
-                        MessageBox.Show(ex.Message);
+                        // check if text file and open it in new window
                     }
+
+                    // fill the pathBox with current path
+                    path_box.Text = currentPath;
                 }
-                else
+                catch (Exception ex)
                 {
-                    // check if text file and open it in new window
+                    MessageBox.Show(ex.Message);
                 }
             }
         }
