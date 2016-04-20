@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.attr_archive_checkboxű = new System.Windows.Forms.CheckBox();
             this.checkBox2 = new System.Windows.Forms.CheckBox();
             this.checkBox3 = new System.Windows.Forms.CheckBox();
             this.checkBox4 = new System.Windows.Forms.CheckBox();
@@ -37,15 +37,15 @@
             this.button2 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
-            // checkBox1
+            // attr_archive_checkboxű
             // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(28, 26);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(62, 17);
-            this.checkBox1.TabIndex = 0;
-            this.checkBox1.Text = "Archive";
-            this.checkBox1.UseVisualStyleBackColor = true;
+            this.attr_archive_checkboxű.AutoSize = true;
+            this.attr_archive_checkboxű.Location = new System.Drawing.Point(28, 26);
+            this.attr_archive_checkboxű.Name = "attr_archive_checkboxű";
+            this.attr_archive_checkboxű.Size = new System.Drawing.Size(62, 17);
+            this.attr_archive_checkboxű.TabIndex = 0;
+            this.attr_archive_checkboxű.Text = "Archive";
+            this.attr_archive_checkboxű.UseVisualStyleBackColor = true;
             // 
             // checkBox2
             // 
@@ -121,7 +121,7 @@
             this.Controls.Add(this.checkBox4);
             this.Controls.Add(this.checkBox3);
             this.Controls.Add(this.checkBox2);
-            this.Controls.Add(this.checkBox1);
+            this.Controls.Add(this.attr_archive_checkboxű);
             this.MinimumSize = new System.Drawing.Size(255, 200);
             this.Name = "AttributesDialog";
             this.Text = "AttributesDialog";
@@ -132,7 +132,7 @@
 
         #endregion
 
-        private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.CheckBox attr_archive_checkboxű;
         private System.Windows.Forms.CheckBox checkBox2;
         private System.Windows.Forms.CheckBox checkBox3;
         private System.Windows.Forms.CheckBox checkBox4;
