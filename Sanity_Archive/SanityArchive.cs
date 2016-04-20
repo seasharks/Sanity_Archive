@@ -25,7 +25,7 @@ namespace Sanity_Archive
 
         }
 
-        #region Directory and File Browser
+#region Directory and File Browser
 
         private void FillFileFolderBox(string path)
         // Fill fileFolder_box with folder and file items found under the given path
@@ -64,6 +64,7 @@ namespace Sanity_Archive
             try
             {
                 FillFileFolderBox(drives_box.Text);
+                path_box.Text = currentPath;
             }
             catch (Exception ex)
             {
@@ -87,7 +88,8 @@ namespace Sanity_Archive
                     {
                         string currentPathWithoutEndingSlash = currentPath.Remove(currentPath.Length - 1);
                         DirectoryInfo parentOfCurrentDir = Directory.GetParent(currentPathWithoutEndingSlash);
-                        clickedItemPath = parentOfCurrentDir.ToString() + "\\";
+                        string parentPath = parentOfCurrentDir.ToString();
+                        clickedItemPath = parentPath.EndsWith("\\") ? parentPath : parentPath + "\\";
                     }
                     else 
                     { 
@@ -115,7 +117,7 @@ namespace Sanity_Archive
             }
         }
 
-        #endregion
+#endregion
 
     }
 }
