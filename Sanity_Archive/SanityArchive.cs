@@ -45,7 +45,7 @@ namespace Sanity_Archive
         ​
         -----------------------------------------------------------------------------*/
         /*] END */
-        
+
         private void SanityArchive_Load(object sender, EventArgs e)
         {
             DriveInfo[] drives = DriveInfo.GetDrives();
@@ -88,8 +88,8 @@ namespace Sanity_Archive
                         string parentPath = parentOfCurrentDir.ToString();
                         clickedItemPath = parentPath.EndsWith("\\") ? parentPath : parentPath + "\\";
                     }
-                    else 
-                    { 
+                    else
+                    {
                         clickedItemPath = currentPath + fileFolder_box.SelectedItem.ToString();
                     }
 
