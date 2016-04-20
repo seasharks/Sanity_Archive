@@ -176,5 +176,16 @@ namespace Sanity_Archive
         }
 
         #endregion
+
+        private void compression_bttn_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void search_bttn_Click(object sender, EventArgs e)
+        {
+            Search s = new Search();
+            s.Show();
+        }
     }
 }

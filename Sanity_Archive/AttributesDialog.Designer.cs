@@ -28,100 +28,100 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
-            this.checkBox2 = new System.Windows.Forms.CheckBox();
-            this.checkBox3 = new System.Windows.Forms.CheckBox();
-            this.checkBox4 = new System.Windows.Forms.CheckBox();
-            this.checkBox5 = new System.Windows.Forms.CheckBox();
-            this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
+            this.attr_archive_checkbox = new System.Windows.Forms.CheckBox();
+            this.attr_system_checkbox = new System.Windows.Forms.CheckBox();
+            this.attr_readonly_checkbox = new System.Windows.Forms.CheckBox();
+            this.attr_compressed_checkbox = new System.Windows.Forms.CheckBox();
+            this.attr_encrypted_checkbox = new System.Windows.Forms.CheckBox();
+            this.ok_button = new System.Windows.Forms.Button();
+            this.cancel_button = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
-            // checkBox1
+            // attr_archive_checkbox
             // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(28, 26);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(62, 17);
-            this.checkBox1.TabIndex = 0;
-            this.checkBox1.Text = "Archive";
-            this.checkBox1.UseVisualStyleBackColor = true;
+            this.attr_archive_checkbox.AutoSize = true;
+            this.attr_archive_checkbox.Location = new System.Drawing.Point(28, 26);
+            this.attr_archive_checkbox.Name = "attr_archive_checkbox";
+            this.attr_archive_checkbox.Size = new System.Drawing.Size(62, 17);
+            this.attr_archive_checkbox.TabIndex = 0;
+            this.attr_archive_checkbox.Text = "Archive";
+            this.attr_archive_checkbox.UseVisualStyleBackColor = true;
             // 
-            // checkBox2
+            // attr_system_checkbox
             // 
-            this.checkBox2.AutoSize = true;
-            this.checkBox2.Location = new System.Drawing.Point(28, 49);
-            this.checkBox2.Name = "checkBox2";
-            this.checkBox2.Size = new System.Drawing.Size(60, 17);
-            this.checkBox2.TabIndex = 1;
-            this.checkBox2.Text = "System";
-            this.checkBox2.UseVisualStyleBackColor = true;
+            this.attr_system_checkbox.AutoSize = true;
+            this.attr_system_checkbox.Location = new System.Drawing.Point(28, 49);
+            this.attr_system_checkbox.Name = "attr_system_checkbox";
+            this.attr_system_checkbox.Size = new System.Drawing.Size(60, 17);
+            this.attr_system_checkbox.TabIndex = 1;
+            this.attr_system_checkbox.Text = "System";
+            this.attr_system_checkbox.UseVisualStyleBackColor = true;
             // 
-            // checkBox3
+            // attr_readonly_checkbox
             // 
-            this.checkBox3.AutoSize = true;
-            this.checkBox3.Location = new System.Drawing.Point(28, 72);
-            this.checkBox3.Name = "checkBox3";
-            this.checkBox3.Size = new System.Drawing.Size(74, 17);
-            this.checkBox3.TabIndex = 2;
-            this.checkBox3.Text = "Read-only";
-            this.checkBox3.UseVisualStyleBackColor = true;
+            this.attr_readonly_checkbox.AutoSize = true;
+            this.attr_readonly_checkbox.Location = new System.Drawing.Point(28, 72);
+            this.attr_readonly_checkbox.Name = "attr_readonly_checkbox";
+            this.attr_readonly_checkbox.Size = new System.Drawing.Size(74, 17);
+            this.attr_readonly_checkbox.TabIndex = 2;
+            this.attr_readonly_checkbox.Text = "Read-only";
+            this.attr_readonly_checkbox.UseVisualStyleBackColor = true;
             // 
-            // checkBox4
+            // attr_compressed_checkbox
             // 
-            this.checkBox4.AutoSize = true;
-            this.checkBox4.Enabled = false;
-            this.checkBox4.Location = new System.Drawing.Point(28, 95);
-            this.checkBox4.Name = "checkBox4";
-            this.checkBox4.Size = new System.Drawing.Size(84, 17);
-            this.checkBox4.TabIndex = 3;
-            this.checkBox4.Text = "Compressed";
-            this.checkBox4.UseVisualStyleBackColor = true;
+            this.attr_compressed_checkbox.AutoSize = true;
+            this.attr_compressed_checkbox.Enabled = false;
+            this.attr_compressed_checkbox.Location = new System.Drawing.Point(28, 95);
+            this.attr_compressed_checkbox.Name = "attr_compressed_checkbox";
+            this.attr_compressed_checkbox.Size = new System.Drawing.Size(84, 17);
+            this.attr_compressed_checkbox.TabIndex = 3;
+            this.attr_compressed_checkbox.Text = "Compressed";
+            this.attr_compressed_checkbox.UseVisualStyleBackColor = true;
             // 
-            // checkBox5
+            // attr_encrypted_checkbox
             // 
-            this.checkBox5.AutoSize = true;
-            this.checkBox5.Enabled = false;
-            this.checkBox5.Location = new System.Drawing.Point(28, 118);
-            this.checkBox5.Name = "checkBox5";
-            this.checkBox5.Size = new System.Drawing.Size(74, 17);
-            this.checkBox5.TabIndex = 4;
-            this.checkBox5.Text = "Encrypted";
-            this.checkBox5.UseVisualStyleBackColor = true;
+            this.attr_encrypted_checkbox.AutoSize = true;
+            this.attr_encrypted_checkbox.Enabled = false;
+            this.attr_encrypted_checkbox.Location = new System.Drawing.Point(28, 118);
+            this.attr_encrypted_checkbox.Name = "attr_encrypted_checkbox";
+            this.attr_encrypted_checkbox.Size = new System.Drawing.Size(74, 17);
+            this.attr_encrypted_checkbox.TabIndex = 4;
+            this.attr_encrypted_checkbox.Text = "Encrypted";
+            this.attr_encrypted_checkbox.UseVisualStyleBackColor = true;
             // 
-            // button1
+            // ok_button
             // 
-            this.button1.Location = new System.Drawing.Point(28, 153);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(84, 23);
-            this.button1.TabIndex = 5;
-            this.button1.Text = "OK";
-            this.button1.UseVisualStyleBackColor = true;
+            this.ok_button.Location = new System.Drawing.Point(28, 153);
+            this.ok_button.Name = "ok_button";
+            this.ok_button.Size = new System.Drawing.Size(84, 23);
+            this.ok_button.TabIndex = 5;
+            this.ok_button.Text = "OK";
+            this.ok_button.UseVisualStyleBackColor = true;
             // 
-            // button2
+            // cancel_button
             // 
-            this.button2.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.button2.Location = new System.Drawing.Point(133, 153);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(84, 23);
-            this.button2.TabIndex = 6;
-            this.button2.Text = "Cancel";
-            this.button2.UseVisualStyleBackColor = true;
+            this.cancel_button.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.cancel_button.Location = new System.Drawing.Point(133, 153);
+            this.cancel_button.Name = "cancel_button";
+            this.cancel_button.Size = new System.Drawing.Size(84, 23);
+            this.cancel_button.TabIndex = 6;
+            this.cancel_button.Text = "Cancel";
+            this.cancel_button.UseVisualStyleBackColor = true;
             // 
             // AttributesDialog
             // 
-            this.AcceptButton = this.button1;
+            this.AcceptButton = this.ok_button;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.CancelButton = this.button2;
+            this.CancelButton = this.cancel_button;
             this.ClientSize = new System.Drawing.Size(239, 188);
-            this.Controls.Add(this.button2);
-            this.Controls.Add(this.button1);
-            this.Controls.Add(this.checkBox5);
-            this.Controls.Add(this.checkBox4);
-            this.Controls.Add(this.checkBox3);
-            this.Controls.Add(this.checkBox2);
-            this.Controls.Add(this.checkBox1);
+            this.Controls.Add(this.cancel_button);
+            this.Controls.Add(this.ok_button);
+            this.Controls.Add(this.attr_encrypted_checkbox);
+            this.Controls.Add(this.attr_compressed_checkbox);
+            this.Controls.Add(this.attr_readonly_checkbox);
+            this.Controls.Add(this.attr_system_checkbox);
+            this.Controls.Add(this.attr_archive_checkbox);
             this.MinimumSize = new System.Drawing.Size(255, 200);
             this.Name = "AttributesDialog";
             this.Text = "AttributesDialog";
@@ -132,12 +132,12 @@
 
         #endregion
 
-        private System.Windows.Forms.CheckBox checkBox1;
-        private System.Windows.Forms.CheckBox checkBox2;
-        private System.Windows.Forms.CheckBox checkBox3;
-        private System.Windows.Forms.CheckBox checkBox4;
-        private System.Windows.Forms.CheckBox checkBox5;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.CheckBox attr_archive_checkbox;
+        private System.Windows.Forms.CheckBox attr_system_checkbox;
+        private System.Windows.Forms.CheckBox attr_readonly_checkbox;
+        private System.Windows.Forms.CheckBox attr_compressed_checkbox;
+        private System.Windows.Forms.CheckBox attr_encrypted_checkbox;
+        private System.Windows.Forms.Button ok_button;
+        private System.Windows.Forms.Button cancel_button;
     }
 }
