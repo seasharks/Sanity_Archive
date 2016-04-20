@@ -25,7 +25,26 @@ namespace Sanity_Archive
 
         }
 
-#region Directory and File Browser
+        #region Directory and File Browser
+        /*[ Compilation unit ----------------------------------------------------------
+        ​
+           Component       : SanityArchive.cs
+        ​
+           Name            : sea-sharks
+        ​
+           Last Author     : Csaszar Hunor
+        ​
+           Language        : C#
+        ​
+           Creation Date   :  20.04.2016
+        ​
+           Description     : file and folder browsing feature
+        ​
+        ​
+                       Copyright (C) Codecool Kft 2015-2016 All Rights Reserved
+        ​
+        -----------------------------------------------------------------------------*/
+        /*] END */
 
         private void FillFileFolderBox(string path)
         // Fill fileFolder_box with folder and file items found under the given path
