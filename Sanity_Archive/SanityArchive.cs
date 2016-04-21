@@ -357,6 +357,67 @@ namespace Sanity_Archive
             {
                 path = currentPath + fileFolder_box.GetItemText(fileFolder_box.SelectedItem);
             }
+
+            if (!path.EndsWith(".."))
+            {
+                CalcSize_SingleSelection();
+            }
+        }
+
+        public long DirSize(DirectoryInfo d)
+        {
+            long size = 0;
+            // Add file sizes.
+            try
+            {
+                FileInfo[] fis = d.GetFiles();
+                foreach (FileInfo fi in fis)
+                {
+                    size += fi.Length;
+                }
+                // Add subdirectory sizes.
+                DirectoryInfo[] dis = d.GetDirectories();
+                foreach (DirectoryInfo di in dis)
+                {
+                    size += DirSize(di);
+                }
+            }
+            catch { size_lbl.Text = "Loading size. . .  something went wrong"; }
+            return size;
+        }
+
+
+        public void CalcSize_SingleSelection()
+        {
+            size_lbl.Text = "Loading size. . .";
+            FileAttributes attr = File.GetAttributes(path);
+            if ((attr & FileAttributes.Directory) == FileAttributes.Directory)
+            {
+                new Thread(() =>
+                {
+                    Thread.CurrentThread.IsBackground = true;
+                    try
+                    {
+                        DirectoryInfo d = new DirectoryInfo(path);
+                        double dirSize = DirSize(d)/1024.0;
+                        if (dirSize < 1024) size_lbl.Text = $"{dirSize:F2} KB";
+                        else if (dirSize < 1048576) size_lbl.Text = $"{dirSize / 1024:F2} MB";
+                        else size_lbl.Text = $"{dirSize / 1048576:F2} GB";
+                    }
+                    catch (Exception)
+                    {
+                        MessageBox.Show("You don't have permission to access some elements in that directory!");
+                        size_lbl.Text = "Denied";
+                    }
+                }).Start();
+            }
+            else
+            {
+                double fileSize = new FileInfo(path).Length / 1024.0;
+                if (fileSize < 1024) size_lbl.Text = $"{fileSize:F2} KB";
+                else if (fileSize < 1048576) size_lbl.Text = $"{fileSize / 1024:F2} MB";
+                else size_lbl.Text = $"{fileSize / 1048576:F2} GB";
+            }
         }
     }
 }
