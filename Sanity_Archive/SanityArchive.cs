@@ -72,7 +72,7 @@ namespace Sanity_Archive
                     FileStream fsInput = new FileStream("encryption.key", FileMode.Open, FileAccess.Read);
                     key = new StreamReader(fsInput).ReadToEnd();
                     Console.WriteLine(key);
-                }
+        }
 
                 if (path.EndsWith(".enc"))
                 {
@@ -313,9 +313,5 @@ namespace Sanity_Archive
         {
 
         }
-
-        #endregion
-
-
     }
 }
