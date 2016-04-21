@@ -355,6 +355,9 @@ namespace Sanity_Archive
             }
         }
 
+
+        #region Compression --------------------------------------------------------------------------------------------------------
+
         private void compression_bttn_Click(object sender, EventArgs e)
         {
             Compress(filePathsInClipBoard);
@@ -365,16 +368,23 @@ namespace Sanity_Archive
             DirectoryInfo dirP = new DirectoryInfo(pathsList[0]);
             string dirParentPath = "";
             string dirParent = "";
+            int i = 0;
 
             if (pathsList.Count > 1) //In case of multiple selecting.
             {
                 if (dirP.Parent != null)
                 {
                     dirParent = dirP.Parent.Name; //Name of the list's parent directory.
-                    dirParentPath = dirP.Parent.FullName; //Absolute filepath of the file(s) contained in the list.
+                    dirParentPath = dirP.Parent.FullName; //Absolute filepath of the files contained in the list.
                 }
 
                 string zipFilePath = dirParentPath + @"\" + dirParent + @".zip"; //Path and name of the destination zip file.
+
+                while (File.Exists(zipFilePath))
+                {
+                    i += 1;
+                    zipFilePath = dirParentPath + @"\" + dirParent + i + @".zip";
+                }
 
                 foreach (var fileToCompressPath in pathsList)
                 {
@@ -389,15 +399,20 @@ namespace Sanity_Archive
             }
             else //In case of single selecting.
             {
+                string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(pathsList[0]); //Just the name of the file without extension.
+
                 if (dirP.Parent != null)
                 {
                     dirParentPath = dirP.Parent.FullName; //Absolute filepath of the files contained in the list.
                 }
 
-                string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(pathsList[0]); //Just the name of the file without extension.
                 string zipFilePath = dirParentPath + @"\" + fileNameWithoutExtension + @".zip"; //Path and name of the destination zip file.
-                Console.WriteLine(zipFilePath);
-                Console.ReadLine();
+
+                while (File.Exists(zipFilePath))
+                {
+                    i += 1;
+                    zipFilePath = dirParentPath + @"\" + fileNameWithoutExtension + i + @".zip";
+                }
 
                 foreach (var fileToCompressPath in pathsList)
                 {
@@ -411,6 +426,9 @@ namespace Sanity_Archive
                 }
             }
         }
+
+
+        #endregion Compression -----------------------------------------------------------------------------------------------------
 
 
     }
