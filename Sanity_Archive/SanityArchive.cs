@@ -5,7 +5,7 @@
       ​
          Name            : sea-sharks
       ​
-         Last Author     : Csaszar Hunor
+         Last Author     : Andras Kesik
       ​
          Language        : C#
       ​
@@ -28,38 +28,140 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-#endregion Used Namespaces ------------------------------------------------------------------------
+using System.Security;
+using System.Security.Cryptography;
+using System.IO;
+using System.Runtime.InteropServices;
+using System.Threading;
+
+
 namespace Sanity_Archive
 {
     public partial class SanityArchive : Form
     {
         string currentPath;
+        private string key = null;
+        List<string> filePathsInClipBoard = new List<string>();
+        private string path;
 
         public SanityArchive()
         {
             InitializeComponent();
+
         }
 
         private void attributes_bttn_Click(object sender, EventArgs e)
         {
-            if (fileFolder_box.SelectedItems.Count > 1)
-            {
-                MessageBox.Show("There are more than one element to be selected");
-            }
-            else if (fileFolder_box.SelectedItems.Count == 1)
-            {
-                string path = currentPath + fileFolder_box.GetItemText(fileFolder_box.SelectedItem);
-                
-                AttributesDialog attrDialog = new AttributesDialog(path);
-                attrDialog.ShowDialog();
-            }
-            else
-            {
-                MessageBox.Show("There is nothing to be selected");
-            }
+           
         }
+
+#region Encrypt
+
+        private void encryption_bttn_Click(object sender, EventArgs e)
+        {
+            //string path;
+            //if (fileFolder_box.SelectedItems.Count > 1)
+            //{
+            //    MessageBox.Show("There are more than one element to be selected");
+            //}
+            //else if (fileFolder_box.SelectedItems.Count == 1)
+            //{
+            //    path = currentPath + fileFolder_box.GetItemText(fileFolder_box.SelectedItem);
+
+                if (!File.Exists("encryption.key")) key = GenerateKey();
+                else
+                {
+                    FileStream fsInput = new FileStream("encryption.key", FileMode.Open, FileAccess.Read);
+                    key = new StreamReader(fsInput).ReadToEnd();
+                    Console.WriteLine(key);
+                }
+
+                if (path.EndsWith(".enc"))
+                {
+                    string pathOriginal = path;
+                    string decryptedFileName = path.Remove(path.Length - 4);
+                    DecryptFile(path, decryptedFileName, key);
+                    File.Delete(pathOriginal);
+                    FillFileFolderBox(currentPath);
+                }
+                else
+                { 
+                    EncryptFile(path, path + ".enc", key);
+                   File.Delete(path);
+                    FillFileFolderBox(currentPath);
+                }
+            //}
+
+        }
+
+        string GenerateKey()
+        {
+            // Create an instance of Symetric Algorithm. Key and IV is generated automatically.
+            DESCryptoServiceProvider desCrypto = (DESCryptoServiceProvider) DESCryptoServiceProvider.Create();
+            string key = ASCIIEncoding.ASCII.GetString(desCrypto.Key);
+            StreamWriter keyWriter = new StreamWriter("encryption.key");
+            keyWriter.Write(key);
+            keyWriter.Flush();
+            keyWriter.Close();
+
+            // Use the Automatically generated key for Encryption. 
+            return key;
+        }
+
+        static void EncryptFile(string sInputFilename, string sOutputFilename, string sKey)
+        {
+            // Filestreamek nyitása
+            FileStream fsInput = new FileStream(sInputFilename, FileMode.Open, FileAccess.Read);
+            FileStream fsEncrypted = new FileStream(sOutputFilename, FileMode.Create, FileAccess.Write);
+            //decryption technology meghatározsa
+            DESCryptoServiceProvider DES = new DESCryptoServiceProvider();
+            //key és vektor beállítása
+            DES.Key = ASCIIEncoding.ASCII.GetBytes(sKey);
+            DES.IV = ASCIIEncoding.ASCII.GetBytes(sKey);
+            //obtain an encrypting object 
+            ICryptoTransform desencrypt = DES.CreateEncryptor();
+            //output filera cryptostream nyitása
+            CryptoStream cryptostream = new CryptoStream(fsEncrypted, desencrypt, CryptoStreamMode.Write);
+            // input fájl olvasása
+            byte[] bytearrayinput = new byte[fsInput.Length - 1];
+            fsInput.Read(bytearrayinput, 0, bytearrayinput.Length);
+            //cryptelt irás
+            cryptostream.Write(bytearrayinput, 0, bytearrayinput.Length);
+            cryptostream.Close();
+            fsInput.Close();
+            fsEncrypted.Close();
+        }
+
+        static void DecryptFile(string sInputFilename, string sOutputFilename, string sKey)
+        {
+            DESCryptoServiceProvider DES = new DESCryptoServiceProvider();
+            //A 64 bit key and IV is required for this provider.
+
+            //Set secret key For DES algorithm.
+            DES.Key = ASCIIEncoding.ASCII.GetBytes(sKey);
+            DES.IV = ASCIIEncoding.ASCII.GetBytes(sKey);
+
+            //Create a file stream to read the encrypted file back.
+            FileStream fsread = new FileStream(sInputFilename, FileMode.Open, FileAccess.Read);
+            //Create a DES decryptor from the DES instance.
+            ICryptoTransform desdecrypt = DES.CreateDecryptor();
+            //Create crypto stream set to read and do a DES decryption transform on incoming bytes.
+            CryptoStream cryptostreamDecr = new CryptoStream(fsread, desdecrypt, CryptoStreamMode.Read);
+            //Print the contents of the decrypted file.
+            StreamWriter fsDecrypted = new StreamWriter(sOutputFilename);
+            fsDecrypted.Write(new StreamReader(cryptostreamDecr).ReadToEnd());
+            fsDecrypted.Flush();
+            fsDecrypted.Close();
+            fsread.Close();
+        }
+
+        private static FileAttributes RemoveAttribute(FileAttributes attributes, FileAttributes attributesToRemove)
+        {
+            return attributes & ~attributesToRemove;
+        }
+
+#endregion
 
         #region Directory and File Browser
         
@@ -157,7 +259,16 @@ namespace Sanity_Archive
             }
             else
             {
-                // check if text file and open it in new window
+                try
+                {
+                    TextReader textReader = new TextReader(this, @path);
+                    textReader.Show();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+                
             }
 
             // fill the pathBox with current path
@@ -205,6 +316,26 @@ namespace Sanity_Archive
         private void size_lbl_Click(object sender, EventArgs e)
         {
 
+        }
+
+
+        #endregion
+
+        private void fileFolder_box_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (fileFolder_box.SelectedItems.Count > 1)
+            {
+                filePathsInClipBoard.Clear();
+                foreach (object item in fileFolder_box.SelectedItems)
+                {
+                    string fileName = item.ToString();
+                    filePathsInClipBoard.Add(currentPath + fileName);
+                }
+            }
+            else if (fileFolder_box.SelectedItems.Count == 1)
+            {
+                path = currentPath + fileFolder_box.GetItemText(fileFolder_box.SelectedItem);
+            }
         }
     }
 }
