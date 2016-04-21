@@ -67,14 +67,15 @@
             this.fileFolder_box.Location = new System.Drawing.Point(16, 69);
             this.fileFolder_box.Name = "fileFolder_box";
             this.fileFolder_box.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.fileFolder_box.Size = new System.Drawing.Size(281, 186);
+            this.fileFolder_box.Size = new System.Drawing.Size(484, 212);
             this.fileFolder_box.TabIndex = 2;
+            this.fileFolder_box.KeyDown += new System.Windows.Forms.KeyEventHandler(this.fileFolder_box_KeyDown);
             this.fileFolder_box.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.fileFolder_box_MouseDoubleClick);
             // 
             // encryption_bttn
             // 
             this.encryption_bttn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.encryption_bttn.Location = new System.Drawing.Point(13, 271);
+            this.encryption_bttn.Location = new System.Drawing.Point(13, 298);
             this.encryption_bttn.Name = "encryption_bttn";
             this.encryption_bttn.Size = new System.Drawing.Size(139, 23);
             this.encryption_bttn.TabIndex = 3;
@@ -84,7 +85,7 @@
             // compression_bttn
             // 
             this.compression_bttn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.compression_bttn.Location = new System.Drawing.Point(158, 271);
+            this.compression_bttn.Location = new System.Drawing.Point(158, 298);
             this.compression_bttn.Name = "compression_bttn";
             this.compression_bttn.Size = new System.Drawing.Size(139, 23);
             this.compression_bttn.TabIndex = 4;
@@ -95,7 +96,7 @@
             // search_bttn
             // 
             this.search_bttn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.search_bttn.Location = new System.Drawing.Point(158, 300);
+            this.search_bttn.Location = new System.Drawing.Point(158, 327);
             this.search_bttn.Name = "search_bttn";
             this.search_bttn.Size = new System.Drawing.Size(139, 23);
             this.search_bttn.TabIndex = 6;
@@ -106,7 +107,7 @@
             // attributes_bttn
             // 
             this.attributes_bttn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.attributes_bttn.Location = new System.Drawing.Point(13, 300);
+            this.attributes_bttn.Location = new System.Drawing.Point(13, 327);
             this.attributes_bttn.Name = "attributes_bttn";
             this.attributes_bttn.Size = new System.Drawing.Size(139, 23);
             this.attributes_bttn.TabIndex = 5;
@@ -116,12 +117,14 @@
             // 
             // size_lbl
             // 
+            this.size_lbl.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.size_lbl.AutoSize = true;
-            this.size_lbl.Location = new System.Drawing.Point(13, 255);
+            this.size_lbl.Location = new System.Drawing.Point(13, 282);
             this.size_lbl.Name = "size_lbl";
             this.size_lbl.Size = new System.Drawing.Size(169, 13);
             this.size_lbl.TabIndex = 7;
             this.size_lbl.Text = "0.0 kB/0.0 kB 0/0 files 0/0 folders";
+            this.size_lbl.Click += new System.EventHandler(this.size_lbl_Click);
             // 
             // path_box
             // 
@@ -129,6 +132,7 @@
             this.path_box.Name = "path_box";
             this.path_box.Size = new System.Drawing.Size(241, 20);
             this.path_box.TabIndex = 8;
+            this.path_box.KeyDown += new System.Windows.Forms.KeyEventHandler(this.path_box_KeyDown);
             // 
             // path_lbl
             // 
@@ -143,7 +147,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(314, 335);
+            this.ClientSize = new System.Drawing.Size(517, 362);
             this.Controls.Add(this.path_lbl);
             this.Controls.Add(this.path_box);
             this.Controls.Add(this.size_lbl);
