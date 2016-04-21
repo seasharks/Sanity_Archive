@@ -28,9 +28,9 @@ namespace Sanity_Archive
 
             _attributes = File.GetAttributes(_filePath);
             attr_archive_checkbox.Checked = (_attributes & FileAttributes.Archive).ToString() == "Archive";
+            attr_hidden_checkbox.Checked = (_attributes & FileAttributes.Hidden).ToString() == "Hidden";
             attr_system_checkbox.Checked = (_attributes & FileAttributes.System).ToString() == "System";
             attr_readonly_checkbox.Checked = (_attributes & FileAttributes.ReadOnly).ToString() == "ReadOnly";
-            attr_compressed_checkbox.Checked = (_attributes & FileAttributes.Compressed).ToString() == "Compressed";
             attr_encrypted_checkbox.Checked = (_attributes & FileAttributes.Encrypted).ToString() == "Encrypted";
         }
 
@@ -48,6 +48,15 @@ namespace Sanity_Archive
             else if (!attr_archive_checkbox.Checked && (_attributes & FileAttributes.Archive).ToString() == "Archive")
             {
                 File.SetAttributes(_filePath, RemoveAttribute(File.GetAttributes(_filePath), FileAttributes.Archive));
+            }
+
+            if (attr_hidden_checkbox.Checked && (_attributes & FileAttributes.Hidden).ToString() != "Hidden")
+            {
+                File.SetAttributes(_filePath, File.GetAttributes(_filePath) | FileAttributes.Hidden);
+            }
+            else if (!attr_hidden_checkbox.Checked && (_attributes & FileAttributes.Hidden).ToString() == "Hidden")
+            {
+                File.SetAttributes(_filePath, RemoveAttribute(File.GetAttributes(_filePath), FileAttributes.Hidden));
             }
 
             if (attr_system_checkbox.Checked && (_attributes & FileAttributes.System).ToString() != "System")

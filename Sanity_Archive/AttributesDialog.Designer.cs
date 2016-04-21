@@ -31,7 +31,7 @@
             this.attr_archive_checkbox = new System.Windows.Forms.CheckBox();
             this.attr_system_checkbox = new System.Windows.Forms.CheckBox();
             this.attr_readonly_checkbox = new System.Windows.Forms.CheckBox();
-            this.attr_compressed_checkbox = new System.Windows.Forms.CheckBox();
+            this.attr_hidden_checkbox = new System.Windows.Forms.CheckBox();
             this.attr_encrypted_checkbox = new System.Windows.Forms.CheckBox();
             this.ok_button = new System.Windows.Forms.Button();
             this.cancel_button = new System.Windows.Forms.Button();
@@ -50,7 +50,7 @@
             // attr_system_checkbox
             // 
             this.attr_system_checkbox.AutoSize = true;
-            this.attr_system_checkbox.Location = new System.Drawing.Point(28, 49);
+            this.attr_system_checkbox.Location = new System.Drawing.Point(28, 95);
             this.attr_system_checkbox.Name = "attr_system_checkbox";
             this.attr_system_checkbox.Size = new System.Drawing.Size(60, 17);
             this.attr_system_checkbox.TabIndex = 1;
@@ -67,21 +67,19 @@
             this.attr_readonly_checkbox.Text = "Read-only";
             this.attr_readonly_checkbox.UseVisualStyleBackColor = true;
             // 
-            // attr_compressed_checkbox
+            // attr_hidden_checkbox
             // 
-            this.attr_compressed_checkbox.AutoSize = true;
-            this.attr_compressed_checkbox.Enabled = false;
-            this.attr_compressed_checkbox.Location = new System.Drawing.Point(28, 95);
-            this.attr_compressed_checkbox.Name = "attr_compressed_checkbox";
-            this.attr_compressed_checkbox.Size = new System.Drawing.Size(84, 17);
-            this.attr_compressed_checkbox.TabIndex = 3;
-            this.attr_compressed_checkbox.Text = "Compressed";
-            this.attr_compressed_checkbox.UseVisualStyleBackColor = true;
+            this.attr_hidden_checkbox.AutoSize = true;
+            this.attr_hidden_checkbox.Location = new System.Drawing.Point(28, 49);
+            this.attr_hidden_checkbox.Name = "attr_hidden_checkbox";
+            this.attr_hidden_checkbox.Size = new System.Drawing.Size(60, 17);
+            this.attr_hidden_checkbox.TabIndex = 3;
+            this.attr_hidden_checkbox.Text = "Hidden";
+            this.attr_hidden_checkbox.UseVisualStyleBackColor = true;
             // 
             // attr_encrypted_checkbox
             // 
             this.attr_encrypted_checkbox.AutoSize = true;
-            this.attr_encrypted_checkbox.Enabled = false;
             this.attr_encrypted_checkbox.Location = new System.Drawing.Point(28, 118);
             this.attr_encrypted_checkbox.Name = "attr_encrypted_checkbox";
             this.attr_encrypted_checkbox.Size = new System.Drawing.Size(74, 17);
@@ -119,7 +117,7 @@
             this.Controls.Add(this.cancel_button);
             this.Controls.Add(this.ok_button);
             this.Controls.Add(this.attr_encrypted_checkbox);
-            this.Controls.Add(this.attr_compressed_checkbox);
+            this.Controls.Add(this.attr_hidden_checkbox);
             this.Controls.Add(this.attr_readonly_checkbox);
             this.Controls.Add(this.attr_system_checkbox);
             this.Controls.Add(this.attr_archive_checkbox);
@@ -137,7 +135,7 @@
         private System.Windows.Forms.CheckBox attr_archive_checkbox;
         private System.Windows.Forms.CheckBox attr_system_checkbox;
         private System.Windows.Forms.CheckBox attr_readonly_checkbox;
-        private System.Windows.Forms.CheckBox attr_compressed_checkbox;
+        private System.Windows.Forms.CheckBox attr_hidden_checkbox;
         private System.Windows.Forms.CheckBox attr_encrypted_checkbox;
         private System.Windows.Forms.Button ok_button;
         private System.Windows.Forms.Button cancel_button;
