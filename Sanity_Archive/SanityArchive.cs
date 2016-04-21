@@ -151,5 +151,10 @@ namespace Sanity_Archive
             Search s = new Search();
             s.Show();
         }
+
+        private void size_lbl_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

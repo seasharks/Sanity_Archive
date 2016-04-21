@@ -73,6 +73,9 @@
             // 
             // search_result_box
             // 
+            this.search_result_box.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.search_result_box.FormattingEnabled = true;
             this.search_result_box.Location = new System.Drawing.Point(12, 71);
             this.search_result_box.Name = "search_result_box";
@@ -102,7 +105,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(367, 254);
+            this.ClientSize = new System.Drawing.Size(365, 255);
             this.Controls.Add(this.brows_button);
             this.Controls.Add(this.filename);
             this.Controls.Add(this.search_result_box);
@@ -110,6 +113,7 @@
             this.Controls.Add(this.search_button);
             this.Controls.Add(this.path);
             this.Controls.Add(this.filename_textbox);
+            this.MinimumSize = new System.Drawing.Size(381, 294);
             this.Name = "Search";
             this.Text = "Search";
             this.Load += new System.EventHandler(this.Search_Load);
