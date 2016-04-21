@@ -51,11 +51,6 @@ namespace Sanity_Archive
 
         }
 
-        private void attributes_bttn_Click(object sender, EventArgs e)
-        {
-           
-        }
-
 #region Encrypt
 
         private void encryption_bttn_Click(object sender, EventArgs e)
@@ -313,12 +308,38 @@ namespace Sanity_Archive
             s.Show();
         }
 
+        private void copy_button_Click(object sender, EventArgs e)
+        {
+
+        }
+
         private void size_lbl_Click(object sender, EventArgs e)
         {
 
         }
 
 
+        #endregion
+
+        #region Attributes handler
+        private void attributes_bttn_Click(object sender, EventArgs e)
+        {
+            if (fileFolder_box.SelectedItems.Count > 1)
+            {
+                MessageBox.Show("There are more than one element to be selected");
+            }
+            else if (fileFolder_box.SelectedItems.Count == 1)
+            {
+                string path = currentPath + fileFolder_box.GetItemText(fileFolder_box.SelectedItem);
+
+                AttributesDialog attrDialog = new AttributesDialog(path);
+                attrDialog.ShowDialog();
+            }
+            else
+            {
+                MessageBox.Show("There is nothing to be selected");
+            }
+        }
         #endregion
 
         private void fileFolder_box_SelectedIndexChanged(object sender, EventArgs e)

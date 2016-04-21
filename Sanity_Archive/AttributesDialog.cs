@@ -26,7 +26,6 @@ namespace Sanity_Archive
             InitializeComponent();
             _filePath = filePath;
 
-            FileInfo finfo = new FileInfo(_filePath);
             _attributes = File.GetAttributes(_filePath);
             attr_archive_checkbox.Checked = (_attributes & FileAttributes.Archive).ToString() == "Archive";
             attr_system_checkbox.Checked = (_attributes & FileAttributes.System).ToString() == "System";
