@@ -38,20 +38,20 @@ namespace Sanity_Archive
             FileAttributes attributes = File.GetAttributes(path);
             key = GenerateKey();
 
-            if ((attributes & FileAttributes.Encrypted) != FileAttributes.Encrypted)
+            if (true) // TODO check fileextension ".enc"
             {
                 // Encrypt the file.    
                 attributes = RemoveAttribute(attributes, FileAttributes.Encrypted);
                 File.SetAttributes(path, attributes);
                 Console.WriteLine("The {0} file is encrypted.", path);
-                EncryptFile(path, @"C:\Workspace\new\encrypted.txt", key);
+                EncryptFile(path, path+".enc", key);
             }
             else
             {
                 // Decrypt the file.
                 File.SetAttributes(path, File.GetAttributes(path) | FileAttributes.Encrypted);
                 Console.WriteLine("The {0} file is decrypted.", path);
-                DecryptFile(@"C:\Workspace\new\encrypted.txt", @"C:\Workspace\new\decrypted.txt", key);
+                DecryptFile(path+".enc", @"C:\Workspace\new\decrypted.txt", key);
             }
 
         }
