@@ -35,6 +35,7 @@
             // 
             this.text_reader_box.Location = new System.Drawing.Point(12, 12);
             this.text_reader_box.Name = "text_reader_box";
+            this.text_reader_box.ReadOnly = true;
             this.text_reader_box.Size = new System.Drawing.Size(260, 237);
             this.text_reader_box.TabIndex = 0;
             this.text_reader_box.Text = "";
@@ -47,6 +48,7 @@
             this.Controls.Add(this.text_reader_box);
             this.Name = "TextReader";
             this.Text = "TextReader";
+            this.Load += new System.EventHandler(this.TextReader_Load);
             this.ResumeLayout(false);
 
         }
