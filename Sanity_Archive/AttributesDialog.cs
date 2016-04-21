@@ -82,6 +82,9 @@ namespace Sanity_Archive
             {
                 File.SetAttributes(_filePath, RemoveAttribute(File.GetAttributes(_filePath), FileAttributes.ReadOnly));
             }
+            File.SetCreationTime(_filePath, created_dateTimePicker.Value);
+            File.SetLastWriteTime(_filePath, modified_dateTimePicker.Value);
+            File.SetLastAccessTime(_filePath, accessed_dateTimePicker.Value);
             this.Close();
         }
 
