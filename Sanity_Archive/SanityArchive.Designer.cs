@@ -155,6 +155,7 @@
             this.copy_button.TabIndex = 10;
             this.copy_button.Text = "Copy";
             this.copy_button.UseVisualStyleBackColor = true;
+            this.copy_button.Click += new System.EventHandler(this.copy_button_Click);
             // 
             // move_button
             // 

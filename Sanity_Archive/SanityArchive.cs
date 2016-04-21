@@ -192,5 +192,10 @@ namespace Sanity_Archive
         {
 
         }
+
+        private void copy_button_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
