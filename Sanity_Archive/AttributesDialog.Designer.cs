@@ -132,7 +132,7 @@
             // created_dateTimePicker
             // 
             this.created_dateTimePicker.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.created_dateTimePicker.CustomFormat = "yyyy.MMMMdd.  hh:mm";
+            this.created_dateTimePicker.CustomFormat = "yyyy.MMMMdd.  HH:mm";
             this.created_dateTimePicker.Location = new System.Drawing.Point(85, 118);
             this.created_dateTimePicker.Name = "dateTimePicker1";
             this.created_dateTimePicker.Size = new System.Drawing.Size(175, 20);
@@ -141,7 +141,7 @@
             // modified_dateTimePicker
             // 
             this.modified_dateTimePicker.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.modified_dateTimePicker.CustomFormat = "yyyy.MMMMdd.  hh:mm";
+            this.modified_dateTimePicker.CustomFormat = "yyyy.MMMMdd.  HH:mm";
             this.modified_dateTimePicker.Location = new System.Drawing.Point(85, 146);
             this.modified_dateTimePicker.Name = "dateTimePicker2";
             this.modified_dateTimePicker.Size = new System.Drawing.Size(175, 20);
@@ -150,7 +150,7 @@
             // accessed_dateTimePicker
             // 
             this.accessed_dateTimePicker.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.accessed_dateTimePicker.CustomFormat = "yyyy.MMMMdd.  hh:mm";
+            this.accessed_dateTimePicker.CustomFormat = "yyyy.MMMMdd.  HH:mm";
             this.accessed_dateTimePicker.Location = new System.Drawing.Point(85, 174);
             this.accessed_dateTimePicker.Name = "dateTimePicker3";
             this.accessed_dateTimePicker.Size = new System.Drawing.Size(175, 20);

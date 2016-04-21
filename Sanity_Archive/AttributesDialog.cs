@@ -27,10 +27,17 @@ namespace Sanity_Archive
             _filePath = filePath;
 
             _attributes = File.GetAttributes(_filePath);
+            DateTime createdDate = File.GetCreationTime(_filePath);
+            DateTime modifiedDate = File.GetLastWriteTime(_filePath);
+            DateTime accessedDate = File.GetLastAccessTime(_filePath);
+
             attr_archive_checkbox.Checked = (_attributes & FileAttributes.Archive).ToString() == "Archive";
             attr_hidden_checkbox.Checked = (_attributes & FileAttributes.Hidden).ToString() == "Hidden";
             attr_system_checkbox.Checked = (_attributes & FileAttributes.System).ToString() == "System";
             attr_readonly_checkbox.Checked = (_attributes & FileAttributes.ReadOnly).ToString() == "ReadOnly";
+            created_dateTimePicker.Value = createdDate;
+            modified_dateTimePicker.Value = modifiedDate;
+            accessed_dateTimePicker.Value = accessedDate;
         }
 
         private static FileAttributes RemoveAttribute(FileAttributes attributes, FileAttributes attributesToRemove)
