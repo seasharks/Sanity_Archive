@@ -41,30 +41,33 @@ namespace Sanity_Archive
     public partial class SanityArchive : Form
     {
         string currentPath;
-        private string key=null;
+        private string key = null;
+        List<string> filePathsInClipBoard = new List<string>();
+        private string path;
 
         public SanityArchive()
         {
             InitializeComponent();
+
         }
 
         private void attributes_bttn_Click(object sender, EventArgs e)
         {
-           
+
         }
 
-#region Encrypt
+        #region Encrypt
 
         private void encryption_bttn_Click(object sender, EventArgs e)
         {
-            string path;
-            if (fileFolder_box.SelectedItems.Count > 1)
-            {
-                MessageBox.Show("There are more than one element to be selected");
-            }
-            else if (fileFolder_box.SelectedItems.Count == 1)
-            {
-                path = currentPath + fileFolder_box.GetItemText(fileFolder_box.SelectedItem);
+            //string path;
+            //if (fileFolder_box.SelectedItems.Count > 1)
+            //{
+            //    MessageBox.Show("There are more than one element to be selected");
+            //}
+            //else if (fileFolder_box.SelectedItems.Count == 1)
+            //{
+            //    path = currentPath + fileFolder_box.GetItemText(fileFolder_box.SelectedItem);
 
                 if (!File.Exists("encryption.key")) key = GenerateKey();
                 else
@@ -77,25 +80,25 @@ namespace Sanity_Archive
                 if (path.EndsWith(".enc"))
                 {
                     string pathOriginal = path;
-                    string decryptedFileName = path.Remove(path.Length-4);
+                    string decryptedFileName = path.Remove(path.Length - 4);
                     DecryptFile(path, decryptedFileName, key);
                     File.Delete(pathOriginal);
                     FillFileFolderBox(currentPath);
                 }
                 else
-                { 
-                   EncryptFile(path, path+".enc", key);
-                   File.Delete(path);
+                {
+                    EncryptFile(path, path + ".enc", key);
+                    File.Delete(path);
                     FillFileFolderBox(currentPath);
                 }
-            }
+            //}
 
         }
 
         string GenerateKey()
         {
             // Create an instance of Symetric Algorithm. Key and IV is generated automatically.
-            DESCryptoServiceProvider desCrypto = (DESCryptoServiceProvider)DESCryptoServiceProvider.Create();
+            DESCryptoServiceProvider desCrypto = (DESCryptoServiceProvider) DESCryptoServiceProvider.Create();
             string key = ASCIIEncoding.ASCII.GetString(desCrypto.Key);
             StreamWriter keyWriter = new StreamWriter("encryption.key");
             keyWriter.Write(key);
@@ -109,8 +112,8 @@ namespace Sanity_Archive
         static void EncryptFile(string sInputFilename, string sOutputFilename, string sKey)
         {
             // Filestreamek nyitása
-            FileStream fsInput = new FileStream(sInputFilename,FileMode.Open,FileAccess.Read);
-            FileStream fsEncrypted = new FileStream(sOutputFilename,FileMode.Create,FileAccess.Write);
+            FileStream fsInput = new FileStream(sInputFilename, FileMode.Open, FileAccess.Read);
+            FileStream fsEncrypted = new FileStream(sOutputFilename, FileMode.Create, FileAccess.Write);
             //decryption technology meghatározsa
             DESCryptoServiceProvider DES = new DESCryptoServiceProvider();
             //key és vektor beállítása
@@ -119,7 +122,7 @@ namespace Sanity_Archive
             //obtain an encrypting object 
             ICryptoTransform desencrypt = DES.CreateEncryptor();
             //output filera cryptostream nyitása
-            CryptoStream cryptostream = new CryptoStream(fsEncrypted,desencrypt,CryptoStreamMode.Write);
+            CryptoStream cryptostream = new CryptoStream(fsEncrypted, desencrypt, CryptoStreamMode.Write);
             // input fájl olvasása
             byte[] bytearrayinput = new byte[fsInput.Length - 1];
             fsInput.Read(bytearrayinput, 0, bytearrayinput.Length);
@@ -157,10 +160,11 @@ namespace Sanity_Archive
         {
             return attributes & ~attributesToRemove;
         }
-#endregion
+
+        #endregion
 
         #region Directory and File Browser
-        
+
         private void SanityArchive_Load(object sender, EventArgs e)
         {
             DriveInfo[] drives = DriveInfo.GetDrives();
@@ -199,7 +203,7 @@ namespace Sanity_Archive
         private void fileFolder_box_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
-            { 
+            {
                 OpenListBoxItem();
             }
         }
@@ -218,9 +222,9 @@ namespace Sanity_Archive
                 }
             }
         }
-        
+
         private void OpenListBoxItem()
-        // collects double-clicked or entered file or folder path and call HandleFileOrFolder with it
+            // collects double-clicked or entered file or folder path and call HandleFileOrFolder with it
         {
             try
             {
@@ -246,7 +250,7 @@ namespace Sanity_Archive
         }
 
         private void HandleFileOrFolder(string path)
-        // decides whether the parameter path is file or folder and calls corresponding methods to handle them
+            // decides whether the parameter path is file or folder and calls corresponding methods to handle them
         {
             FileAttributes attr = File.GetAttributes(@path);
             if ((attr & FileAttributes.Directory) == FileAttributes.Directory)
@@ -264,7 +268,7 @@ namespace Sanity_Archive
                 {
                     MessageBox.Show(ex.Message);
                 }
-                
+
             }
 
             // fill the pathBox with current path
@@ -272,7 +276,7 @@ namespace Sanity_Archive
         }
 
         private void FillFileFolderBox(string path)
-        // Fill fileFolder_box with folder and file items found under the given path
+            // Fill fileFolder_box with folder and file items found under the given path
         {
             fileFolder_box.Items.Clear();
             DirectoryInfo selectedDirectory = new DirectoryInfo(path);
@@ -287,8 +291,8 @@ namespace Sanity_Archive
             foreach (DirectoryInfo dir in containedDirs)
             {
                 if (dir.Attributes != FileAttributes.System
-                && dir.Attributes != FileAttributes.Hidden
-                && !dir.ToString().StartsWith("$"))
+                    && dir.Attributes != FileAttributes.Hidden
+                    && !dir.ToString().StartsWith("$"))
                     fileFolder_box.Items.Add(dir.ToString() + "\\");
             }
 
@@ -314,8 +318,24 @@ namespace Sanity_Archive
 
         }
 
+
         #endregion
 
-
+        private void fileFolder_box_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (fileFolder_box.SelectedItems.Count > 1)
+            {
+                filePathsInClipBoard.Clear();
+                foreach (object item in fileFolder_box.SelectedItems)
+                {
+                    string fileName = item.ToString();
+                    filePathsInClipBoard.Add(currentPath + fileName);
+                }
+            }
+            else if (fileFolder_box.SelectedItems.Count == 1)
+            {
+                path = currentPath + fileFolder_box.GetItemText(fileFolder_box.SelectedItem);
+            }
+        }
     }
 }
