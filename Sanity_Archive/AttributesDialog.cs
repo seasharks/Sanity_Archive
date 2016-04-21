@@ -42,28 +42,6 @@ namespace Sanity_Archive
 
         private void ok_button_Click(object sender, EventArgs e)
         {
-            //List<FileAttributes> attributesToRemove = new List<FileAttributes>();
-            //FileAttributes currentAttributes = _attributes;
-
-            /*if (!attr_archive_checkbox.Checked && (_attributes & FileAttributes.Archive).ToString() == "Archive")
-            {
-                attributesToRemove.Add(FileAttributes.Archive);
-            }
-            if (!attr_system_checkbox.Checked && (_attributes & FileAttributes.System).ToString() == "System")
-            {
-                attributesToRemove.Add(FileAttributes.System);
-            }
-            if (!attr_readonly_checkbox.Checked && (_attributes & FileAttributes.ReadOnly).ToString() == "Readonly")
-            {
-                attributesToRemove.Add(FileAttributes.ReadOnly);
-            }
-
-            for (int i = 0; i < attributesToRemove.Count; i++)
-            {
-                currentAttributes = RemoveAttribute(_attributes, attributesToRemove[i]);
-                File.SetAttributes(_filePath, currentAttributes);
-            }*/
-
             if (attr_archive_checkbox.Checked && (_attributes & FileAttributes.Archive).ToString() != "Archive")
             {
                 File.SetAttributes(_filePath, File.GetAttributes(_filePath) | FileAttributes.Archive);

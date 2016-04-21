@@ -123,8 +123,9 @@
             this.Controls.Add(this.attr_readonly_checkbox);
             this.Controls.Add(this.attr_system_checkbox);
             this.Controls.Add(this.attr_archive_checkbox);
-            this.MinimumSize = new System.Drawing.Size(255, 200);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Name = "AttributesDialog";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "AttributesDialog";
             this.ResumeLayout(false);
             this.PerformLayout();
