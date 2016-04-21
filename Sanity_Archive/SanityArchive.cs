@@ -41,12 +41,14 @@ namespace Sanity_Archive
     public partial class SanityArchive : Form
     {
         string currentPath;
+        private string key = null;
         List<string> filePathsInClipBoard = new List<string>();
-        private string key=null;
+        private string path;
 
         public SanityArchive()
         {
             InitializeComponent();
+
         }
 
         private void attributes_bttn_Click(object sender, EventArgs e)
@@ -58,14 +60,14 @@ namespace Sanity_Archive
 
         private void encryption_bttn_Click(object sender, EventArgs e)
         {
-            string path;
-            if (fileFolder_box.SelectedItems.Count > 1)
-            {
-                MessageBox.Show("There are more than one element to be selected");
-            }
-            else if (fileFolder_box.SelectedItems.Count == 1)
-            {
-                path = currentPath + fileFolder_box.GetItemText(fileFolder_box.SelectedItem);
+            //string path;
+            //if (fileFolder_box.SelectedItems.Count > 1)
+            //{
+            //    MessageBox.Show("There are more than one element to be selected");
+            //}
+            //else if (fileFolder_box.SelectedItems.Count == 1)
+            //{
+            //    path = currentPath + fileFolder_box.GetItemText(fileFolder_box.SelectedItem);
 
                 if (!File.Exists("encryption.key")) key = GenerateKey();
                 else
@@ -73,30 +75,30 @@ namespace Sanity_Archive
                     FileStream fsInput = new FileStream("encryption.key", FileMode.Open, FileAccess.Read);
                     key = new StreamReader(fsInput).ReadToEnd();
                     Console.WriteLine(key);
-        }
+                }
 
                 if (path.EndsWith(".enc"))
                 {
                     string pathOriginal = path;
-                    string decryptedFileName = path.Remove(path.Length-4);
+                    string decryptedFileName = path.Remove(path.Length - 4);
                     DecryptFile(path, decryptedFileName, key);
                     File.Delete(pathOriginal);
                     FillFileFolderBox(currentPath);
                 }
                 else
                 { 
-                   EncryptFile(path, path+".enc", key);
+                    EncryptFile(path, path + ".enc", key);
                    File.Delete(path);
                     FillFileFolderBox(currentPath);
                 }
-            }
+            //}
 
         }
 
         string GenerateKey()
         {
             // Create an instance of Symetric Algorithm. Key and IV is generated automatically.
-            DESCryptoServiceProvider desCrypto = (DESCryptoServiceProvider)DESCryptoServiceProvider.Create();
+            DESCryptoServiceProvider desCrypto = (DESCryptoServiceProvider) DESCryptoServiceProvider.Create();
             string key = ASCIIEncoding.ASCII.GetString(desCrypto.Key);
             StreamWriter keyWriter = new StreamWriter("encryption.key");
             keyWriter.Write(key);
@@ -110,8 +112,8 @@ namespace Sanity_Archive
         static void EncryptFile(string sInputFilename, string sOutputFilename, string sKey)
         {
             // Filestreamek nyitása
-            FileStream fsInput = new FileStream(sInputFilename,FileMode.Open,FileAccess.Read);
-            FileStream fsEncrypted = new FileStream(sOutputFilename,FileMode.Create,FileAccess.Write);
+            FileStream fsInput = new FileStream(sInputFilename, FileMode.Open, FileAccess.Read);
+            FileStream fsEncrypted = new FileStream(sOutputFilename, FileMode.Create, FileAccess.Write);
             //decryption technology meghatározsa
             DESCryptoServiceProvider DES = new DESCryptoServiceProvider();
             //key és vektor beállítása
@@ -120,7 +122,7 @@ namespace Sanity_Archive
             //obtain an encrypting object 
             ICryptoTransform desencrypt = DES.CreateEncryptor();
             //output filera cryptostream nyitása
-            CryptoStream cryptostream = new CryptoStream(fsEncrypted,desencrypt,CryptoStreamMode.Write);
+            CryptoStream cryptostream = new CryptoStream(fsEncrypted, desencrypt, CryptoStreamMode.Write);
             // input fájl olvasása
             byte[] bytearrayinput = new byte[fsInput.Length - 1];
             fsInput.Read(bytearrayinput, 0, bytearrayinput.Length);
@@ -158,6 +160,7 @@ namespace Sanity_Archive
         {
             return attributes & ~attributesToRemove;
         }
+
 #endregion
 
 #region Directory and File Browser
@@ -343,7 +346,24 @@ namespace Sanity_Archive
             }
         }
 
+
         #endregion
 
+        private void fileFolder_box_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (fileFolder_box.SelectedItems.Count > 1)
+            {
+                filePathsInClipBoard.Clear();
+                foreach (object item in fileFolder_box.SelectedItems)
+                {
+                    string fileName = item.ToString();
+                    filePathsInClipBoard.Add(currentPath + fileName);
+                }
+            }
+            else if (fileFolder_box.SelectedItems.Count == 1)
+            {
+                path = currentPath + fileFolder_box.GetItemText(fileFolder_box.SelectedItem);
+            }
+        }
     }
 }

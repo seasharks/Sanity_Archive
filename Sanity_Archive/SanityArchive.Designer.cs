@@ -72,6 +72,7 @@
             this.fileFolder_box.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
             this.fileFolder_box.Size = new System.Drawing.Size(282, 147);
             this.fileFolder_box.TabIndex = 2;
+            this.fileFolder_box.SelectedIndexChanged += new System.EventHandler(this.fileFolder_box_SelectedIndexChanged);
             this.fileFolder_box.KeyDown += new System.Windows.Forms.KeyEventHandler(this.fileFolder_box_KeyDown);
             this.fileFolder_box.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.fileFolder_box_MouseDoubleClick);
             // 
