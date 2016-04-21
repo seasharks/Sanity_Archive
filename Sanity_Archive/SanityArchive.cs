@@ -34,24 +34,35 @@ namespace Sanity_Archive
 
         private void encryption_bttn_Click(object sender, EventArgs e)
         {
-            string path = @"C:\Workspace\new\text.txt";
-            FileAttributes attributes = File.GetAttributes(path);
-            key = GenerateKey();
-
-            if (true) // TODO check fileextension ".enc"
+            string path;
+            if (fileFolder_box.SelectedItems.Count > 1)
             {
-                // Encrypt the file.    
-                attributes = RemoveAttribute(attributes, FileAttributes.Encrypted);
-                File.SetAttributes(path, attributes);
-                Console.WriteLine("The {0} file is encrypted.", path);
-                EncryptFile(path, path+".enc", key);
+                MessageBox.Show("There are more than one element to be selected");
             }
-            else
+            else if (fileFolder_box.SelectedItems.Count == 1)
             {
-                // Decrypt the file.
-                File.SetAttributes(path, File.GetAttributes(path) | FileAttributes.Encrypted);
-                Console.WriteLine("The {0} file is decrypted.", path);
-                DecryptFile(path+".enc", @"C:\Workspace\new\decrypted.txt", key);
+                path = currentPath + fileFolder_box.GetItemText(fileFolder_box.SelectedItem);
+
+                //string path = @"C:\Workspace\new\text.txt";
+                FileAttributes attributes = File.GetAttributes(path);
+                key = GenerateKey();
+
+                if (path.EndsWith(".enc"))
+                {
+                    // Decrypt the file.
+                    File.SetAttributes(path, File.GetAttributes(path) | FileAttributes.Encrypted);
+                    Console.WriteLine("The {0} file is decrypted.", path);
+                    DecryptFile(path, @"C:\Workspace\new\decrypted.txt", key);
+
+                }
+                else
+                {
+                    // Encrypt the file.    
+                    attributes = RemoveAttribute(attributes, FileAttributes.Encrypted);
+                    File.SetAttributes(path, attributes);
+                    Console.WriteLine("The {0} file is encrypted.", path);
+                    EncryptFile(path, @"C:\Workspace\new\text.txt.enc", key);
+                }
             }
 
         }
