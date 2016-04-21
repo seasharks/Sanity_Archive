@@ -177,6 +177,7 @@
             this.paste_button.TabIndex = 12;
             this.paste_button.Text = "Paste";
             this.paste_button.UseVisualStyleBackColor = true;
+            this.paste_button.Click += new System.EventHandler(this.paste_button_Click);
             // 
             // SanityArchive
             // 

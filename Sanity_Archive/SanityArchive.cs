@@ -5,13 +5,13 @@
       ​
          Name            : sea-sharks
       ​
-         Last Author     : Andras Kesik
+         Last Author     : Hunor Csaszar
       ​
          Language        : C#
       ​
-         Creation Date   :  20.04.2016
+         Creation Date   :  21.04.2016
       ​
-         Description     : file and folder browsing feature
+         Description     : copy and move files
       ​
       ​
                      Copyright (C) Codecool Kft 2015-2016 All Rights Reserved
@@ -34,13 +34,14 @@ using System.Security.Cryptography;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading;
-
+#endregion
 
 namespace Sanity_Archive
 {
     public partial class SanityArchive : Form
     {
         string currentPath;
+        List<string> filePathsInClipBoard = new List<string>();
         private string key=null;
 
         public SanityArchive()
@@ -159,7 +160,7 @@ namespace Sanity_Archive
         }
 #endregion
 
-        #region Directory and File Browser
+#region Directory and File Browser
         
         private void SanityArchive_Load(object sender, EventArgs e)
         {
@@ -296,7 +297,7 @@ namespace Sanity_Archive
             fileFolder_box.Items.AddRange(containedFiles);
         }
 
-        #endregion
+#endregion
 
         private void compression_bttn_Click(object sender, EventArgs e)
         {
@@ -313,5 +314,36 @@ namespace Sanity_Archive
         {
 
         }
+
+#region Copy, Move and Paste
+
+        private void copy_button_Click(object sender, EventArgs e)
+        {
+            foreach (object item in fileFolder_box.SelectedItems)
+            {
+                string fileName = item.ToString();
+                filePathsInClipBoard.Add(currentPath + fileName);
+                MessageBox.Show(filePathsInClipBoard[0]);
+            }
+        }
+
+        private void paste_button_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                foreach (string item in filePathsInClipBoard)
+                {
+                    string destinationPath = currentPath + item;
+                    File.Copy(item, destinationPath);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        #endregion
+
     }
 }
