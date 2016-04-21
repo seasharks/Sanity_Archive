@@ -69,6 +69,7 @@
             this.fileFolder_box.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
             this.fileFolder_box.Size = new System.Drawing.Size(484, 212);
             this.fileFolder_box.TabIndex = 2;
+            this.fileFolder_box.KeyDown += new System.Windows.Forms.KeyEventHandler(this.fileFolder_box_KeyDown);
             this.fileFolder_box.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.fileFolder_box_MouseDoubleClick);
             // 
             // encryption_bttn
@@ -131,6 +132,7 @@
             this.path_box.Name = "path_box";
             this.path_box.Size = new System.Drawing.Size(241, 20);
             this.path_box.TabIndex = 8;
+            this.path_box.KeyDown += new System.Windows.Forms.KeyEventHandler(this.path_box_KeyDown);
             // 
             // path_lbl
             // 
