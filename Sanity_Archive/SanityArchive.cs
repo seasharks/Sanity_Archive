@@ -32,6 +32,7 @@ using System.Windows.Forms;
 using System.Security;
 using System.Security.Cryptography;
 using System.IO;
+using System.IO.Compression;
 using System.Runtime.InteropServices;
 using System.Threading;
 
@@ -297,11 +298,6 @@ namespace Sanity_Archive
 
         #endregion
 
-        private void compression_bttn_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void search_bttn_Click(object sender, EventArgs e)
         {
             Search s = new Search();
@@ -358,5 +354,64 @@ namespace Sanity_Archive
                 path = currentPath + fileFolder_box.GetItemText(fileFolder_box.SelectedItem);
             }
         }
+
+        private void compression_bttn_Click(object sender, EventArgs e)
+        {
+            Compress(filePathsInClipBoard);
+        }
+
+        private void Compress(List<string> pathsList)
+        {
+            DirectoryInfo dirP = new DirectoryInfo(pathsList[0]);
+            string dirParentPath = "";
+            string dirParent = "";
+
+            if (pathsList.Count > 1) //In case of multiple selecting.
+            {
+                if (dirP.Parent != null)
+                {
+                    dirParent = dirP.Parent.Name; //Name of the list's parent directory.
+                    dirParentPath = dirP.Parent.FullName; //Absolute filepath of the file(s) contained in the list.
+                }
+
+                string zipFilePath = dirParentPath + @"\" + dirParent + @".zip"; //Path and name of the destination zip file.
+
+                foreach (var fileToCompressPath in pathsList)
+                {
+                    DirectoryInfo pathInfo = new DirectoryInfo(fileToCompressPath); //Full paths and names of the files to be compressed.
+                    string fileName = pathInfo.Name; //Just the name of the file with extension.
+
+                    using (ZipArchive createZipFile = ZipFile.Open(zipFilePath, ZipArchiveMode.Update))
+                    {
+                        createZipFile.CreateEntryFromFile(fileToCompressPath, fileName);
+                    }
+                }
+            }
+            else //In case of single selecting.
+            {
+                if (dirP.Parent != null)
+                {
+                    dirParentPath = dirP.Parent.FullName; //Absolute filepath of the files contained in the list.
+                }
+
+                string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(pathsList[0]); //Just the name of the file without extension.
+                string zipFilePath = dirParentPath + @"\" + fileNameWithoutExtension + @".zip"; //Path and name of the destination zip file.
+                Console.WriteLine(zipFilePath);
+                Console.ReadLine();
+
+                foreach (var fileToCompressPath in pathsList)
+                {
+                    DirectoryInfo pathInfo = new DirectoryInfo(fileToCompressPath); //Full paths and names of the files to be compressed.
+                    string fileName = pathInfo.Name; //Just the name of the file with extension.
+
+                    using (ZipArchive createZipFile = ZipFile.Open(zipFilePath, ZipArchiveMode.Update))
+                    {
+                        createZipFile.CreateEntryFromFile(fileToCompressPath, fileName);
+                    }
+                }
+            }
+        }
+
+
     }
 }
