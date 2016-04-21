@@ -65,8 +65,14 @@ namespace Sanity_Archive
             else if (fileFolder_box.SelectedItems.Count == 1)
             {
                 path = currentPath + fileFolder_box.GetItemText(fileFolder_box.SelectedItem);
- 
-                if(key==null)key = GenerateKey();
+
+                if (!File.Exists("encryption.key")) key = GenerateKey();
+                else
+                {
+                    FileStream fsInput = new FileStream("encryption.key", FileMode.Open, FileAccess.Read);
+                    key = new StreamReader(fsInput).ReadToEnd();
+                    Console.WriteLine(key);
+                }
 
                 if (path.EndsWith(".enc"))
                 {
@@ -90,11 +96,14 @@ namespace Sanity_Archive
         {
             // Create an instance of Symetric Algorithm. Key and IV is generated automatically.
             DESCryptoServiceProvider desCrypto = (DESCryptoServiceProvider)DESCryptoServiceProvider.Create();
-
-            //FileStream saveKey = new FileStream();
+            string key = ASCIIEncoding.ASCII.GetString(desCrypto.Key);
+            StreamWriter keyWriter = new StreamWriter("encryption.key");
+            keyWriter.Write(key);
+            keyWriter.Flush();
+            keyWriter.Close();
 
             // Use the Automatically generated key for Encryption. 
-            return ASCIIEncoding.ASCII.GetString(desCrypto.Key);
+            return key;
         }
 
         static void EncryptFile(string sInputFilename, string sOutputFilename, string sKey)
