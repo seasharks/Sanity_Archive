@@ -52,6 +52,7 @@
     <Compile Include="AttributesDialog.Designer.cs">
       <DependentUpon>AttributesDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="FileSearch.cs" />
     <Compile Include="SanityArchive.cs">
       <SubType>Form</SubType>
     </Compile>
