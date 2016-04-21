@@ -53,10 +53,10 @@ namespace Sanity_Archive
 
         private void attributes_bttn_Click(object sender, EventArgs e)
         {
-
+           
         }
 
-        #region Encrypt
+#region Encrypt
 
         private void encryption_bttn_Click(object sender, EventArgs e)
         {
@@ -86,9 +86,9 @@ namespace Sanity_Archive
                     FillFileFolderBox(currentPath);
                 }
                 else
-                {
+                { 
                     EncryptFile(path, path + ".enc", key);
-                    File.Delete(path);
+                   File.Delete(path);
                     FillFileFolderBox(currentPath);
                 }
             //}
@@ -161,10 +161,10 @@ namespace Sanity_Archive
             return attributes & ~attributesToRemove;
         }
 
-        #endregion
+#endregion
 
         #region Directory and File Browser
-
+        
         private void SanityArchive_Load(object sender, EventArgs e)
         {
             DriveInfo[] drives = DriveInfo.GetDrives();
@@ -203,7 +203,7 @@ namespace Sanity_Archive
         private void fileFolder_box_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
-            {
+            { 
                 OpenListBoxItem();
             }
         }
@@ -222,9 +222,9 @@ namespace Sanity_Archive
                 }
             }
         }
-
+        
         private void OpenListBoxItem()
-            // collects double-clicked or entered file or folder path and call HandleFileOrFolder with it
+        // collects double-clicked or entered file or folder path and call HandleFileOrFolder with it
         {
             try
             {
@@ -250,7 +250,7 @@ namespace Sanity_Archive
         }
 
         private void HandleFileOrFolder(string path)
-            // decides whether the parameter path is file or folder and calls corresponding methods to handle them
+        // decides whether the parameter path is file or folder and calls corresponding methods to handle them
         {
             FileAttributes attr = File.GetAttributes(@path);
             if ((attr & FileAttributes.Directory) == FileAttributes.Directory)
@@ -268,7 +268,7 @@ namespace Sanity_Archive
                 {
                     MessageBox.Show(ex.Message);
                 }
-
+                
             }
 
             // fill the pathBox with current path
@@ -276,7 +276,7 @@ namespace Sanity_Archive
         }
 
         private void FillFileFolderBox(string path)
-            // Fill fileFolder_box with folder and file items found under the given path
+        // Fill fileFolder_box with folder and file items found under the given path
         {
             fileFolder_box.Items.Clear();
             DirectoryInfo selectedDirectory = new DirectoryInfo(path);
@@ -291,8 +291,8 @@ namespace Sanity_Archive
             foreach (DirectoryInfo dir in containedDirs)
             {
                 if (dir.Attributes != FileAttributes.System
-                    && dir.Attributes != FileAttributes.Hidden
-                    && !dir.ToString().StartsWith("$"))
+                && dir.Attributes != FileAttributes.Hidden
+                && !dir.ToString().StartsWith("$"))
                     fileFolder_box.Items.Add(dir.ToString() + "\\");
             }
 
