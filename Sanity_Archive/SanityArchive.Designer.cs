@@ -38,6 +38,9 @@
             this.size_lbl = new System.Windows.Forms.Label();
             this.path_box = new System.Windows.Forms.TextBox();
             this.path_lbl = new System.Windows.Forms.Label();
+            this.copy_button = new System.Windows.Forms.Button();
+            this.move_button = new System.Windows.Forms.Button();
+            this.paste_button = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // drive_lbl
@@ -67,7 +70,7 @@
             this.fileFolder_box.Location = new System.Drawing.Point(16, 69);
             this.fileFolder_box.Name = "fileFolder_box";
             this.fileFolder_box.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.fileFolder_box.Size = new System.Drawing.Size(484, 212);
+            this.fileFolder_box.Size = new System.Drawing.Size(282, 147);
             this.fileFolder_box.TabIndex = 2;
             this.fileFolder_box.KeyDown += new System.Windows.Forms.KeyEventHandler(this.fileFolder_box_KeyDown);
             this.fileFolder_box.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.fileFolder_box_MouseDoubleClick);
@@ -75,7 +78,7 @@
             // encryption_bttn
             // 
             this.encryption_bttn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.encryption_bttn.Location = new System.Drawing.Point(13, 298);
+            this.encryption_bttn.Location = new System.Drawing.Point(16, 255);
             this.encryption_bttn.Name = "encryption_bttn";
             this.encryption_bttn.Size = new System.Drawing.Size(139, 23);
             this.encryption_bttn.TabIndex = 3;
@@ -85,7 +88,7 @@
             // compression_bttn
             // 
             this.compression_bttn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.compression_bttn.Location = new System.Drawing.Point(158, 298);
+            this.compression_bttn.Location = new System.Drawing.Point(158, 255);
             this.compression_bttn.Name = "compression_bttn";
             this.compression_bttn.Size = new System.Drawing.Size(139, 23);
             this.compression_bttn.TabIndex = 4;
@@ -96,7 +99,7 @@
             // search_bttn
             // 
             this.search_bttn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.search_bttn.Location = new System.Drawing.Point(158, 327);
+            this.search_bttn.Location = new System.Drawing.Point(158, 284);
             this.search_bttn.Name = "search_bttn";
             this.search_bttn.Size = new System.Drawing.Size(139, 23);
             this.search_bttn.TabIndex = 6;
@@ -107,7 +110,7 @@
             // attributes_bttn
             // 
             this.attributes_bttn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.attributes_bttn.Location = new System.Drawing.Point(13, 327);
+            this.attributes_bttn.Location = new System.Drawing.Point(16, 284);
             this.attributes_bttn.Name = "attributes_bttn";
             this.attributes_bttn.Size = new System.Drawing.Size(139, 23);
             this.attributes_bttn.TabIndex = 5;
@@ -119,7 +122,7 @@
             // 
             this.size_lbl.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.size_lbl.AutoSize = true;
-            this.size_lbl.Location = new System.Drawing.Point(13, 282);
+            this.size_lbl.Location = new System.Drawing.Point(15, 239);
             this.size_lbl.Name = "size_lbl";
             this.size_lbl.Size = new System.Drawing.Size(169, 13);
             this.size_lbl.TabIndex = 7;
@@ -143,11 +146,44 @@
             this.path_lbl.TabIndex = 9;
             this.path_lbl.Text = "Path";
             // 
+            // copy_button
+            // 
+            this.copy_button.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.copy_button.Location = new System.Drawing.Point(16, 313);
+            this.copy_button.Name = "copy_button";
+            this.copy_button.Size = new System.Drawing.Size(87, 23);
+            this.copy_button.TabIndex = 10;
+            this.copy_button.Text = "Copy";
+            this.copy_button.UseVisualStyleBackColor = true;
+            // 
+            // move_button
+            // 
+            this.move_button.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.move_button.Location = new System.Drawing.Point(109, 313);
+            this.move_button.Name = "move_button";
+            this.move_button.Size = new System.Drawing.Size(87, 23);
+            this.move_button.TabIndex = 11;
+            this.move_button.Text = "Move";
+            this.move_button.UseVisualStyleBackColor = true;
+            // 
+            // paste_button
+            // 
+            this.paste_button.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.paste_button.Location = new System.Drawing.Point(202, 313);
+            this.paste_button.Name = "paste_button";
+            this.paste_button.Size = new System.Drawing.Size(95, 23);
+            this.paste_button.TabIndex = 12;
+            this.paste_button.Text = "Paste";
+            this.paste_button.UseVisualStyleBackColor = true;
+            // 
             // SanityArchive
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(517, 362);
+            this.ClientSize = new System.Drawing.Size(315, 354);
+            this.Controls.Add(this.paste_button);
+            this.Controls.Add(this.move_button);
+            this.Controls.Add(this.copy_button);
             this.Controls.Add(this.path_lbl);
             this.Controls.Add(this.path_box);
             this.Controls.Add(this.size_lbl);
@@ -158,6 +194,7 @@
             this.Controls.Add(this.fileFolder_box);
             this.Controls.Add(this.drives_box);
             this.Controls.Add(this.drive_lbl);
+            this.MaximumSize = new System.Drawing.Size(331, 393);
             this.Name = "SanityArchive";
             this.Text = "Sanity Archive";
             this.Load += new System.EventHandler(this.SanityArchive_Load);
@@ -178,6 +215,9 @@
         private System.Windows.Forms.Label size_lbl;
         private System.Windows.Forms.TextBox path_box;
         private System.Windows.Forms.Label path_lbl;
+        private System.Windows.Forms.Button copy_button;
+        private System.Windows.Forms.Button move_button;
+        private System.Windows.Forms.Button paste_button;
     }
 }
 
