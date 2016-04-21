@@ -22,17 +22,6 @@ namespace Sanity_Archive
 
         private void attributes_bttn_Click(object sender, EventArgs e)
         {
-            if (fileFolder_box.Items.Count == 0)
-            {
-                currentPath = "C:/testfiles/";
-                fileFolder_box.Items.Add("Week14A");
-                fileFolder_box.Items.Add("81m.jpg");
-                fileFolder_box.Items.Add("Morok.java");
-                fileFolder_box.Items.Add("Morok2.java");
-                fileFolder_box.Items.Add("swt.zip");
-                return;
-            }
-
             if (fileFolder_box.SelectedItems.Count > 1)
             {
                 MessageBox.Show("There are more than one element to be selected");
