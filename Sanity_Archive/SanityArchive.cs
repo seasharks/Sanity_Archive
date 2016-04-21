@@ -28,12 +28,12 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Security;
 using System.Security.Cryptography;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Threading;
 
 
 namespace Sanity_Archive
@@ -41,7 +41,7 @@ namespace Sanity_Archive
     public partial class SanityArchive : Form
     {
         string currentPath;
-        private string key;
+        private string key=null;
 
         public SanityArchive()
         {
@@ -65,26 +65,22 @@ namespace Sanity_Archive
             else if (fileFolder_box.SelectedItems.Count == 1)
             {
                 path = currentPath + fileFolder_box.GetItemText(fileFolder_box.SelectedItem);
-
-                //string path = @"C:\Workspace\new\text.txt";
-                FileAttributes attributes = File.GetAttributes(path);
-                key = GenerateKey();
+ 
+                if(key==null)key = GenerateKey();
 
                 if (path.EndsWith(".enc"))
                 {
-                    // Decrypt the file.
-                    File.SetAttributes(path, File.GetAttributes(path) | FileAttributes.Encrypted);
-                    Console.WriteLine("The {0} file is decrypted.", path);
-                    DecryptFile(path, @"C:\Workspace\new\decrypted.txt", key);
-
+                    string pathOriginal = path;
+                    string decryptedFileName = path.Remove(path.Length-4);
+                    DecryptFile(path, decryptedFileName, key);
+                    File.Delete(pathOriginal);
+                    FillFileFolderBox(currentPath);
                 }
                 else
-                {
-                    // Encrypt the file.    
-                    attributes = RemoveAttribute(attributes, FileAttributes.Encrypted);
-                    File.SetAttributes(path, attributes);
-                    Console.WriteLine("The {0} file is encrypted.", path);
-                    EncryptFile(path, @"C:\Workspace\new\text.txt.enc", key);
+                { 
+                   EncryptFile(path, path+".enc", key);
+                   File.Delete(path);
+                    FillFileFolderBox(currentPath);
                 }
             }
 
@@ -129,25 +125,23 @@ namespace Sanity_Archive
         {
             DESCryptoServiceProvider DES = new DESCryptoServiceProvider();
             //A 64 bit key and IV is required for this provider.
+
             //Set secret key For DES algorithm.
             DES.Key = ASCIIEncoding.ASCII.GetBytes(sKey);
-            //Set initialization vector.
             DES.IV = ASCIIEncoding.ASCII.GetBytes(sKey);
 
             //Create a file stream to read the encrypted file back.
             FileStream fsread = new FileStream(sInputFilename, FileMode.Open, FileAccess.Read);
             //Create a DES decryptor from the DES instance.
             ICryptoTransform desdecrypt = DES.CreateDecryptor();
-            //Create crypto stream set to read and do a 
-            //DES decryption transform on incoming bytes.
-            CryptoStream cryptostreamDecr = new CryptoStream(fsread,
-                                                         desdecrypt,
-                                                         CryptoStreamMode.Read);
+            //Create crypto stream set to read and do a DES decryption transform on incoming bytes.
+            CryptoStream cryptostreamDecr = new CryptoStream(fsread, desdecrypt, CryptoStreamMode.Read);
             //Print the contents of the decrypted file.
             StreamWriter fsDecrypted = new StreamWriter(sOutputFilename);
             fsDecrypted.Write(new StreamReader(cryptostreamDecr).ReadToEnd());
             fsDecrypted.Flush();
             fsDecrypted.Close();
+            fsread.Close();
         }
 
         private static FileAttributes RemoveAttribute(FileAttributes attributes, FileAttributes attributesToRemove)
