@@ -143,7 +143,16 @@ namespace Sanity_Archive
             }
             else
             {
-                // check if text file and open it in new window
+                try
+                {
+                    TextReader textReader = new TextReader(this, @path);
+                    textReader.Show();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+                
             }
 
             // fill the pathBox with current path
