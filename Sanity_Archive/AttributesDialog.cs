@@ -31,7 +31,6 @@ namespace Sanity_Archive
             attr_hidden_checkbox.Checked = (_attributes & FileAttributes.Hidden).ToString() == "Hidden";
             attr_system_checkbox.Checked = (_attributes & FileAttributes.System).ToString() == "System";
             attr_readonly_checkbox.Checked = (_attributes & FileAttributes.ReadOnly).ToString() == "ReadOnly";
-            attr_encrypted_checkbox.Checked = (_attributes & FileAttributes.Encrypted).ToString() == "Encrypted";
         }
 
         private static FileAttributes RemoveAttribute(FileAttributes attributes, FileAttributes attributesToRemove)
@@ -77,6 +76,11 @@ namespace Sanity_Archive
                 File.SetAttributes(_filePath, RemoveAttribute(File.GetAttributes(_filePath), FileAttributes.ReadOnly));
             }
             this.Close();
+        }
+
+        private void AttributesDialog_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }
