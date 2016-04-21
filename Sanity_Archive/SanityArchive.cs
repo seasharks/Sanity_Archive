@@ -29,6 +29,7 @@ namespace Sanity_Archive
                 fileFolder_box.Items.Add("81m.jpg");
                 fileFolder_box.Items.Add("Morok.java");
                 fileFolder_box.Items.Add("Morok2.java");
+                fileFolder_box.Items.Add("swt.zip");
                 return;
             }
 
@@ -39,16 +40,8 @@ namespace Sanity_Archive
             else if (fileFolder_box.SelectedItems.Count == 1)
             {
                 string path = currentPath + fileFolder_box.GetItemText(fileFolder_box.SelectedItem);
-                MessageBox.Show(((File.GetAttributes(path) & FileAttributes.ReadOnly).ToString() == "ReadOnly").ToString());
-                      
-                AttributesDialog attrDialog = new AttributesDialog();
-                for (int i = 0; i < attrDialog.Controls.Count; i++)
-                {
-                    if (attrDialog.Controls[i].Name == "")
-                    {
-
-                    }
-                }
+                
+                AttributesDialog attrDialog = new AttributesDialog(path);
                 attrDialog.ShowDialog();
             }
             else
