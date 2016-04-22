@@ -352,19 +352,97 @@ namespace Sanity_Archive
                     string fileName = item.ToString();
                     filePathsInClipBoard.Add(currentPath + fileName);
                 }
+
             }
             else if (fileFolder_box.SelectedItems.Count == 1)
             {
                 path = currentPath + fileFolder_box.GetItemText(fileFolder_box.SelectedItem);
+
             }
 
-            if (!path.EndsWith(".."))
-            {
-                CalcSize_SingleSelection();
-            }
+            CalculateSize();
+
         }
 
-        public long DirSize(DirectoryInfo d)
+#region Calculate Size
+        public void CalculateSize()
+        {
+            size_lbl.Text = "Loading size. . .";
+            long size = 0;
+            //FOR ONE SELECTED ITEM
+            if (fileFolder_box.SelectedItems.Count == 1)
+            {
+                FileAttributes attr = File.GetAttributes(path);
+                //CHECK IF DIRECTORY
+                if ((attr & FileAttributes.Directory) == FileAttributes.Directory)
+                {
+                    new Thread(() =>
+                    {
+                        Thread.CurrentThread.IsBackground = true;
+                        try
+                        {
+                            if (!path.EndsWith(".."))
+                            {
+                                DirectoryInfo directoryInfo = new DirectoryInfo(path);
+                                double dirSize = DirSize(directoryInfo)/1024.0;
+                                RefreshSizeLabel(dirSize);
+                            }
+                        }
+                        catch (Exception)
+                        {
+                            MessageBox.Show("You don't have permission to access some elements in that directory!");
+                            size_lbl.Text = "Denied";
+                        }
+                    }).Start();
+                }
+                else
+                {
+                    if (!path.EndsWith(".."))
+                    {
+                        double fileSize = new FileInfo(path).Length/1024.0;
+                        RefreshSizeLabel(fileSize);
+                    }
+                }
+            }
+            //FOR MULTIPLE SELECTION
+            else
+            {
+                new Thread(() =>
+                {
+                    //Thread.CurrentThread.IsBackground = true;
+                    foreach (string filePath in filePathsInClipBoard)
+                    {
+                        FileAttributes attr = File.GetAttributes(path);
+                        //CHECK IF DIRECTORY
+                        if (!path.EndsWith(".."))
+                        {
+                            if ((attr & FileAttributes.Directory) == FileAttributes.Directory)
+                            {
+                                    try
+                                    {
+                                            DirectoryInfo directoryInfo = new DirectoryInfo(filePath);
+                                            size += DirSize(directoryInfo);
+                                    }
+                                    catch (Exception)
+                                    {
+                                    MessageBox.Show("You don't have permission to access some elements in that directory!");
+                                    size_lbl.Text = "Denied";
+                                    }  
+                            }
+                            else
+                            {
+                                size += new FileInfo(filePath).Length;
+                            }
+                        }
+
+                    }
+                    double sizeOfFiles = size / 1024.0;
+                    RefreshSizeLabel(sizeOfFiles); 
+                }).Start();
+            }
+            
+        }
+        private long DirSize(DirectoryInfo d)
         {
             long size = 0;
             // Add file sizes.
@@ -385,39 +463,12 @@ namespace Sanity_Archive
             catch { size_lbl.Text = "Loading size. . .  something went wrong"; }
             return size;
         }
-
-
-        public void CalcSize_SingleSelection()
+        private void RefreshSizeLabel(double size)
         {
-            size_lbl.Text = "Loading size. . .";
-            FileAttributes attr = File.GetAttributes(path);
-            if ((attr & FileAttributes.Directory) == FileAttributes.Directory)
-            {
-                new Thread(() =>
-                {
-                    Thread.CurrentThread.IsBackground = true;
-                    try
-                    {
-                        DirectoryInfo d = new DirectoryInfo(path);
-                        double dirSize = DirSize(d)/1024.0;
-                        if (dirSize < 1024) size_lbl.Text = $"{dirSize:F2} KB";
-                        else if (dirSize < 1048576) size_lbl.Text = $"{dirSize / 1024:F2} MB";
-                        else size_lbl.Text = $"{dirSize / 1048576:F2} GB";
-                    }
-                    catch (Exception)
-                    {
-                        MessageBox.Show("You don't have permission to access some elements in that directory!");
-                        size_lbl.Text = "Denied";
-                    }
-                }).Start();
-            }
-            else
-            {
-                double fileSize = new FileInfo(path).Length / 1024.0;
-                if (fileSize < 1024) size_lbl.Text = $"{fileSize:F2} KB";
-                else if (fileSize < 1048576) size_lbl.Text = $"{fileSize / 1024:F2} MB";
-                else size_lbl.Text = $"{fileSize / 1048576:F2} GB";
-            }
+            if (size < 1024) size_lbl.Text = $"{size:F2} KB";
+            else if (size < 1048576) size_lbl.Text = $"{size / 1024:F2} MB";
+            else size_lbl.Text = $"{size / 1048576:F2} GB";
         }
+#endregion
     }
 }
