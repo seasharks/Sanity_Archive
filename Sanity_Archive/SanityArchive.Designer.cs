@@ -168,6 +168,7 @@
             this.move_button.TabIndex = 11;
             this.move_button.Text = "Move";
             this.move_button.UseVisualStyleBackColor = true;
+            this.move_button.Click += new System.EventHandler(this.move_button_Click);
             // 
             // paste_button
             // 

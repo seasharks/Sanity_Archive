@@ -34,6 +34,7 @@ using System.Security.Cryptography;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading;
+using System.Collections.Specialized;
 #endregion
 
 namespace Sanity_Archive
@@ -44,6 +45,7 @@ namespace Sanity_Archive
         private string key = null;
         List<string> filePathsInClipBoard = new List<string>();
         private string path;
+        private bool dataMovingInPogress = false;
 
         public SanityArchive()
         {
@@ -307,12 +309,7 @@ namespace Sanity_Archive
             Search s = new Search();
             s.Show();
         }
-
-        private void copy_button_Click(object sender, EventArgs e)
-        {
-
-        }
-
+        
         private void size_lbl_Click(object sender, EventArgs e)
         {
 
@@ -320,25 +317,54 @@ namespace Sanity_Archive
 
 #region Copy, Move and Paste
 
+        private void PutSelectedItemsInClipboard()
+        {
+            if (fileFolder_box.SelectedItems.Count > 1)
+            {
+                StringCollection pathsInClipBoard = new StringCollection();
+                foreach (string path in filePathsInClipBoard)
+                {
+                    pathsInClipBoard.Add(path);
+                }
+                Clipboard.SetFileDropList(pathsInClipBoard);
+            }
+            else if (fileFolder_box.SelectedItems.Count == 1)
+            {
+                Clipboard.SetText(path);
+            }
+            else
+            {
+                MessageBox.Show("Nothing is selected", "Failure", MessageBoxButtons.OK);
+            }
+        }
+
         private void copy_button_Click(object sender, EventArgs e)
         {
-            foreach (object item in fileFolder_box.SelectedItems)
-            {
-                string fileName = item.ToString();
-                filePathsInClipBoard.Add(currentPath + fileName);
-                MessageBox.Show(filePathsInClipBoard[0]);
-            }
+            PutSelectedItemsInClipboard();
+            dataMovingInPogress = false;
+        }
+
+        private void move_button_Click(object sender, EventArgs e)
+        {
+            PutSelectedItemsInClipboard();
+            dataMovingInPogress = true;
         }
 
         private void paste_button_Click(object sender, EventArgs e)
         {
+            StringCollection pathsFromClipBoard = Clipboard.GetFileDropList();
+            
             try
             {
-                foreach (string item in filePathsInClipBoard)
+                foreach (string item in pathsFromClipBoard)
                 {
-                    string destinationPath = currentPath + item;
-                    File.Copy(item, destinationPath);
+                    FileInfo data = new FileInfo(item);
+                    string destinationPath = currentPath + data.Name;
+                    if (dataMovingInPogress) File.Move(item, destinationPath);
+                    else File.Copy(item, destinationPath);
                 }
+
+                dataMovingInPogress = false;
             }
             catch (Exception ex)
             {
