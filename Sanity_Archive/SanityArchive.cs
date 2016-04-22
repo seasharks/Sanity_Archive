@@ -394,14 +394,13 @@ namespace Sanity_Archive
                     try
                     {
                         createZipFile.CreateEntryFromFile(singlePath, fileName);
+                        MessageBox.Show(@"Arhive file successfully created!");
                     }
                     catch (DirectoryNotFoundException)
                     {
                         MessageBox.Show(@"You can not add directories to the archive!");
                     }
                 }
-
-                MessageBox.Show(@"Arhive file successfully created!");
             }
 
             //In case of multiple selecting. ---------------------------------------------------------------------------------------------------
@@ -427,8 +426,7 @@ namespace Sanity_Archive
 
                 foreach (var fileToCompressPath in pathsList)
                 {
-                    DirectoryInfo pathInfo = new DirectoryInfo(fileToCompressPath);
-                        //Full paths and names of the files to be compressed.
+                    DirectoryInfo pathInfo = new DirectoryInfo(fileToCompressPath); //Full paths and names of the files to be compressed.
                     string fileNames = pathInfo.Name; //Just the name of the file with extension.
 
                     using (ZipArchive createZipFile = ZipFile.Open(zipFilePaths, ZipArchiveMode.Update))
@@ -436,6 +434,7 @@ namespace Sanity_Archive
                         try
                         {
                             createZipFile.CreateEntryFromFile(fileToCompressPath, fileNames);
+                            MessageBox.Show(@"Arhive file successfully created from multiple files!");
                         }
                         catch (DirectoryNotFoundException)
                         {
@@ -443,7 +442,6 @@ namespace Sanity_Archive
                         }
                     }
                 }
-                MessageBox.Show(@"Arhive file successfully created from multiple files!");
             }
 
             //In case of selection is ZERO. ---------------------------------------------------------------------------------------
@@ -460,40 +458,84 @@ namespace Sanity_Archive
 
         private void exctract_bttn_Click(object sender, EventArgs e)
         {
-            Decompression(filePathsInClipBoard);
+            Decompression(path, filePathsInClipBoard);
         }
 
-        private void Decompression(List<string> pathsList)
+        private void Decompression(string singlePath, List<string> pathsList)
         {
-            string extraxtionPath = "";
+            string zipExtractionPath = "";
 
-            DirectoryInfo dirP = new DirectoryInfo(pathsList[0]);
+            //In case of single selecting. ----------------------------------------------------------------------------------------------
 
-            foreach (string zipPath in pathsList)
+            if (fileFolder_box.SelectedItems.Count == 1)
             {
-                if (Path.GetExtension(zipPath) == ".zip")
+                if (Path.GetExtension(singlePath) == ".zip")
                 {
-                    using (ZipArchive archive = ZipFile.Open(zipPath, ZipArchiveMode.Update))
+                    using (ZipArchive archive = ZipFile.Open(singlePath, ZipArchiveMode.Update))
                     {
-                        if (dirP.Parent != null)
-                        {
-                            string zipSourcePath = dirP.Parent.FullName; //Absolute filepath of the files contained in the list.
-                            string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(zipPath);
-                            extraxtionPath = zipSourcePath + @"\" + fileNameWithoutExtension;
-                        }
+                        string parentPath = Directory.GetParent(singlePath).FullName;
+                        string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(singlePath);
+                        zipExtractionPath = parentPath + @"\" + fileNameWithoutExtension;
+
                         try
                         {
-                            archive.ExtractToDirectory(extraxtionPath);
+                            archive.ExtractToDirectory(zipExtractionPath);
+                            MessageBox.Show(@"Files has been extracted to separate folders.");
                         }
-                        catch (Exception)
+                        catch (Exception )
                         {
                             MessageBox.Show(@"You extracted once these files. This operation is not supported.");
                         }
                     }
                 }
+                else
+                {
+                    MessageBox.Show(@"Please choose an arhive file to decompress!");
+                }
             }
 
-            MessageBox.Show(@"Files has been extracted to separate folders.");
+            //In case of multiple selecting. ---------------------------------------------------------------------------------------------------
+
+            if (fileFolder_box.SelectedItems.Count > 1)
+            {
+                DirectoryInfo dirP = new DirectoryInfo(pathsList[0]);
+
+                foreach (string zipPath in pathsList)
+                {
+                    if (Path.GetExtension(zipPath) == ".zip")
+                    {
+                        using (ZipArchive archive = ZipFile.Open(zipPath, ZipArchiveMode.Update))
+                        {
+                            if (dirP.Parent != null)
+                            {
+                                string zipSourcePath = dirP.Parent.FullName; //Absolute filepath of the files contained in the list.
+                                string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(zipPath);
+                                zipExtractionPath = zipSourcePath + @"\" + fileNameWithoutExtension;
+                            }
+                            try
+                            {
+                                archive.ExtractToDirectory(zipExtractionPath);
+                                MessageBox.Show(@"Files has been extracted to separate folders.");
+                            }
+                            catch (Exception)
+                            {
+                                MessageBox.Show(@"You extracted once these files. This operation is not supported.");
+                            }
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show(@"Please choose an arhive file to decompress!");
+                    }
+                }
+            }
+
+            //In case of selection is ZERO. ---------------------------------------------------------------------------------------
+
+            if (fileFolder_box.SelectedItems.Count == 0)
+            {
+                MessageBox.Show(@"No items selected!");
+            }
         }
 
         #endregion Decompression/Extract ------------------------------------------------------------------------------------------------------
