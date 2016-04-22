@@ -87,27 +87,39 @@ namespace Sanity_Archive
                 if (attr_archive_checkbox.Checked != ((_attributesOfFiles[i] & FileAttributes.Archive).ToString() == "Archive"))
                 {
                     attr_archive_checkbox.ThreeState = true;
-                    attr_archive_checkbox.CheckState = System.Windows.Forms.CheckState.Indeterminate;
+                    attr_archive_checkbox.CheckState = CheckState.Indeterminate;
                 }
                 if (attr_hidden_checkbox.Checked != ((_attributesOfFiles[i] & FileAttributes.Hidden).ToString() == "Hidden"))
                 {
                     attr_hidden_checkbox.ThreeState = true;
-                    attr_hidden_checkbox.CheckState = System.Windows.Forms.CheckState.Indeterminate;
+                    attr_hidden_checkbox.CheckState = CheckState.Indeterminate;
                 }
                 if (attr_readonly_checkbox.Checked != ((_attributesOfFiles[i] & FileAttributes.ReadOnly).ToString() == "ReadOnly"))
                 {
                     attr_readonly_checkbox.ThreeState = true;
-                    attr_readonly_checkbox.CheckState = System.Windows.Forms.CheckState.Indeterminate;
+                    attr_readonly_checkbox.CheckState = CheckState.Indeterminate;
                 }
                 if (attr_system_checkbox.Checked != ((_attributesOfFiles[i] & FileAttributes.System).ToString() == "System"))
                 {
                     attr_system_checkbox.ThreeState = true;
-                    attr_system_checkbox.CheckState = System.Windows.Forms.CheckState.Indeterminate;
+                    attr_system_checkbox.CheckState = CheckState.Indeterminate;
                 }
             }
             created_dateTimePicker.Value = _createdDate;
             modified_dateTimePicker.Value = _modifiedDate;
             accessed_dateTimePicker.Value = _accessedDate;
+        }
+
+        private void AddGivenAttributeToAllFile(FileAttributes attribute)
+        {
+            for (int i = 0; i < _attributesOfFiles.Count; i++)
+                File.SetAttributes(_filePaths[i], File.GetAttributes(_filePaths[i]) | attribute);
+        }
+
+        private void RemoveGivenAttributeFromAllFile(FileAttributes attribute)
+        {
+            for (int i = 0; i < _attributesOfFiles.Count; i++)
+                File.SetAttributes(_filePaths[i], RemoveAttribute(File.GetAttributes(_filePaths[i]), attribute));
         }
 
         private static FileAttributes RemoveAttribute(FileAttributes attributes, FileAttributes attributesToRemove)
@@ -116,6 +128,18 @@ namespace Sanity_Archive
         }
 
         private void ok_button_Click(object sender, EventArgs e)
+        {
+            if (_attributesOfFiles.Count > 1)
+            {
+                ok_button_Click_MultipleFileSelected();
+            }
+            else
+            {
+                ok_button_Click_SingleFileSelected();
+            }
+        }
+
+        private void ok_button_Click_SingleFileSelected()
         {
             try
             {
@@ -154,9 +178,24 @@ namespace Sanity_Archive
                 {
                     File.SetAttributes(_filePath, RemoveAttribute(File.GetAttributes(_filePath), FileAttributes.ReadOnly));
                 }
-                File.SetCreationTime(_filePath, created_dateTimePicker.Value);
-                File.SetLastWriteTime(_filePath, modified_dateTimePicker.Value);
-                File.SetLastAccessTime(_filePath, accessed_dateTimePicker.Value);
+                if ((_attributes & FileAttributes.Directory) == FileAttributes.Directory)
+                {
+                    if (_createdDate != created_dateTimePicker.Value)
+                        Directory.SetCreationTime(_filePath, created_dateTimePicker.Value);
+                    if (_modifiedDate != modified_dateTimePicker.Value)
+                        Directory.SetLastWriteTime(_filePath, modified_dateTimePicker.Value);
+                    if (_accessedDate != accessed_dateTimePicker.Value)
+                        Directory.SetLastAccessTime(_filePath, accessed_dateTimePicker.Value);
+                }
+                else
+                {
+                    if (_createdDate != created_dateTimePicker.Value)
+                        File.SetCreationTime(_filePath, created_dateTimePicker.Value);
+                    if (_modifiedDate != modified_dateTimePicker.Value)
+                        File.SetLastWriteTime(_filePath, modified_dateTimePicker.Value);
+                    if (_accessedDate != accessed_dateTimePicker.Value)
+                        File.SetLastAccessTime(_filePath, accessed_dateTimePicker.Value);
+                }
             }
             catch (UnauthorizedAccessException)
             {
@@ -165,6 +204,135 @@ namespace Sanity_Archive
             finally
             {
                 this.Close();
+            }
+        }
+
+        private void ok_button_Click_MultipleFileSelected()
+        {
+            try
+            {
+                if (attr_archive_checkbox.ThreeState)
+                {
+                    if (attr_archive_checkbox.CheckState == CheckState.Checked)
+                        AddGivenAttributeToAllFile(FileAttributes.Archive);
+                    else if (attr_archive_checkbox.CheckState == CheckState.Unchecked)
+                        RemoveGivenAttributeFromAllFile(FileAttributes.Archive);
+                }
+                else
+                {
+                    if (attr_archive_checkbox.Checked && (_attributesOfFiles[0] & FileAttributes.Archive).ToString() != "Archive")
+                        AddGivenAttributeToAllFile(FileAttributes.Archive);
+                    else if (!attr_archive_checkbox.Checked && (_attributesOfFiles[0] & FileAttributes.Archive).ToString() == "Archive")
+                        RemoveGivenAttributeFromAllFile(FileAttributes.Archive);
+                }
+
+                if (attr_hidden_checkbox.ThreeState)
+                {
+                    if (attr_hidden_checkbox.CheckState == CheckState.Checked)
+                        AddGivenAttributeToAllFile(FileAttributes.Hidden);
+                    else if (attr_hidden_checkbox.CheckState == CheckState.Unchecked)
+                        RemoveGivenAttributeFromAllFile(FileAttributes.Hidden);
+                }
+                else
+                {
+                    if (attr_hidden_checkbox.Checked && (_attributesOfFiles[0] & FileAttributes.Hidden).ToString() != "Hidden")
+                        AddGivenAttributeToAllFile(FileAttributes.Hidden);
+                    else if (!attr_hidden_checkbox.Checked && (_attributesOfFiles[0] & FileAttributes.Hidden).ToString() == "Hidden")
+                        RemoveGivenAttributeFromAllFile(FileAttributes.Hidden);
+                }
+
+                if (attr_readonly_checkbox.ThreeState)
+                {
+                    if (attr_readonly_checkbox.CheckState == CheckState.Checked)
+                        AddGivenAttributeToAllFile(FileAttributes.ReadOnly);
+                    else if (attr_readonly_checkbox.CheckState == CheckState.Unchecked)
+                        RemoveGivenAttributeFromAllFile(FileAttributes.ReadOnly);
+                }
+                else
+                {
+                    if (attr_readonly_checkbox.Checked && (_attributesOfFiles[0] & FileAttributes.ReadOnly).ToString() != "ReadOnly")
+                        AddGivenAttributeToAllFile(FileAttributes.ReadOnly);
+                    else if (!attr_readonly_checkbox.Checked && (_attributesOfFiles[0] & FileAttributes.ReadOnly).ToString() == "ReadOnly")
+                        RemoveGivenAttributeFromAllFile(FileAttributes.ReadOnly);
+                }
+
+                if (attr_system_checkbox.ThreeState)
+                {
+                    if (attr_system_checkbox.CheckState == CheckState.Checked)
+                        AddGivenAttributeToAllFile(FileAttributes.System);
+                    else if (attr_system_checkbox.CheckState == CheckState.Unchecked)
+                        RemoveGivenAttributeFromAllFile(FileAttributes.System);
+                }
+                else
+                {
+                    if (attr_system_checkbox.Checked && (_attributesOfFiles[0] & FileAttributes.System).ToString() != "System")
+                        AddGivenAttributeToAllFile(FileAttributes.System);
+                    else if (!attr_system_checkbox.Checked && (_attributesOfFiles[0] & FileAttributes.System).ToString() == "System")
+                        RemoveGivenAttributeFromAllFile(FileAttributes.System);
+                }
+                
+                if (_createdDate != created_dateTimePicker.Value)
+                {
+                    for (int i = 0; i < _filePaths.Count; i++)
+                    {
+                        if ((_attributesOfFiles[i] & FileAttributes.Directory) == FileAttributes.Directory)
+                            Directory.SetCreationTime(_filePaths[i], created_dateTimePicker.Value);
+                        else
+                            File.SetCreationTime(_filePaths[i], created_dateTimePicker.Value);
+                    }
+                }
+                if (_modifiedDate != modified_dateTimePicker.Value)
+                {
+                    for (int i = 0; i < _filePaths.Count; i++)
+                    {
+                        if ((_attributesOfFiles[i] & FileAttributes.Directory) == FileAttributes.Directory)
+                            Directory.SetLastWriteTime(_filePaths[i], modified_dateTimePicker.Value);
+                        else
+                            File.SetLastWriteTime(_filePaths[i], modified_dateTimePicker.Value);
+                    }
+                }
+                if (_accessedDate != accessed_dateTimePicker.Value)
+                {
+                    for (int i = 0; i < _filePaths.Count; i++)
+                    {
+                        if ((_attributesOfFiles[i] & FileAttributes.Directory) == FileAttributes.Directory)
+                            Directory.SetLastAccessTime(_filePaths[i], accessed_dateTimePicker.Value);
+                        else
+                            File.SetLastAccessTime(_filePaths[i], accessed_dateTimePicker.Value);
+                    }
+                }
+            }
+            catch (UnauthorizedAccessException)
+            {
+                // It raises when user checks "ReadOnly" attribute
+            }
+            finally
+            {
+                this.Close();
+            }
+        }
+
+        private void created_dateTimePicker_ValueChanged(object sender, EventArgs e)
+        {
+            if (created_dateTimePicker.CustomFormat == " ")
+            {
+                created_dateTimePicker.CustomFormat = "yyyy.MMMMdd.  HH:mm:ss";
+            }
+        }
+
+        private void modified_dateTimePicker_ValueChanged(object sender, EventArgs e)
+        {
+            if (modified_dateTimePicker.CustomFormat == " ")
+            {
+                modified_dateTimePicker.CustomFormat = "yyyy.MMMMdd.  HH:mm:ss";
+            }
+        }
+
+        private void accessed_dateTimePicker_ValueChanged(object sender, EventArgs e)
+        {
+            if (accessed_dateTimePicker.CustomFormat == " ")
+            {
+                accessed_dateTimePicker.CustomFormat = "yyyy.MMMMdd.  HH:mm:ss";
             }
         }
     }

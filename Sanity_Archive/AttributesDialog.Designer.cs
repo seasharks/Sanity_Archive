@@ -112,6 +112,7 @@
             this.created_dateTimePicker.Name = "created_dateTimePicker";
             this.created_dateTimePicker.Size = new System.Drawing.Size(184, 20);
             this.created_dateTimePicker.TabIndex = 7;
+            this.created_dateTimePicker.ValueChanged += new System.EventHandler(this.created_dateTimePicker_ValueChanged);
             // 
             // created_label
             // 
@@ -148,6 +149,7 @@
             this.modified_dateTimePicker.Name = "modified_dateTimePicker";
             this.modified_dateTimePicker.Size = new System.Drawing.Size(184, 20);
             this.modified_dateTimePicker.TabIndex = 11;
+            this.modified_dateTimePicker.ValueChanged += new System.EventHandler(this.modified_dateTimePicker_ValueChanged);
             // 
             // accessed_dateTimePicker
             // 
@@ -157,6 +159,7 @@
             this.accessed_dateTimePicker.Name = "accessed_dateTimePicker";
             this.accessed_dateTimePicker.Size = new System.Drawing.Size(184, 20);
             this.accessed_dateTimePicker.TabIndex = 12;
+            this.accessed_dateTimePicker.ValueChanged += new System.EventHandler(this.accessed_dateTimePicker_ValueChanged);
             // 
             // warning_label
             // 
