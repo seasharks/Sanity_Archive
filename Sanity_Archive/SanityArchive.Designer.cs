@@ -124,11 +124,11 @@
             // 
             this.size_lbl.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.size_lbl.AutoSize = true;
-            this.size_lbl.Location = new System.Drawing.Point(15, 239);
+            this.size_lbl.Location = new System.Drawing.Point(15, 236);
             this.size_lbl.Name = "size_lbl";
-            this.size_lbl.Size = new System.Drawing.Size(169, 13);
+            this.size_lbl.Size = new System.Drawing.Size(38, 13);
             this.size_lbl.TabIndex = 7;
-            this.size_lbl.Text = "0.0 kB/0.0 kB 0/0 files 0/0 folders";
+            this.size_lbl.Text = "0.0 kB";
             this.size_lbl.Click += new System.EventHandler(this.size_lbl_Click);
             // 
             // path_box
