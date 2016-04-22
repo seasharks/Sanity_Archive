@@ -41,6 +41,7 @@
             this.copy_button = new System.Windows.Forms.Button();
             this.move_button = new System.Windows.Forms.Button();
             this.paste_button = new System.Windows.Forms.Button();
+            this.exctract_bttn = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // drive_lbl
@@ -92,9 +93,9 @@
             this.compression_bttn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.compression_bttn.Location = new System.Drawing.Point(158, 255);
             this.compression_bttn.Name = "compression_bttn";
-            this.compression_bttn.Size = new System.Drawing.Size(139, 23);
+            this.compression_bttn.Size = new System.Drawing.Size(68, 23);
             this.compression_bttn.TabIndex = 4;
-            this.compression_bttn.Text = "Compress/Decompress";
+            this.compression_bttn.Text = "Compress";
             this.compression_bttn.UseVisualStyleBackColor = true;
             this.compression_bttn.Click += new System.EventHandler(this.compression_bttn_Click);
             // 
@@ -179,11 +180,22 @@
             this.paste_button.Text = "Paste";
             this.paste_button.UseVisualStyleBackColor = true;
             // 
+            // exctract_bttn
+            // 
+            this.exctract_bttn.Location = new System.Drawing.Point(229, 255);
+            this.exctract_bttn.Name = "exctract_bttn";
+            this.exctract_bttn.Size = new System.Drawing.Size(68, 23);
+            this.exctract_bttn.TabIndex = 13;
+            this.exctract_bttn.Text = "Extract";
+            this.exctract_bttn.UseVisualStyleBackColor = true;
+            this.exctract_bttn.Click += new System.EventHandler(this.exctract_bttn_Click);
+            // 
             // SanityArchive
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(315, 354);
+            this.Controls.Add(this.exctract_bttn);
             this.Controls.Add(this.paste_button);
             this.Controls.Add(this.move_button);
             this.Controls.Add(this.copy_button);
@@ -221,6 +233,7 @@
         private System.Windows.Forms.Button copy_button;
         private System.Windows.Forms.Button move_button;
         private System.Windows.Forms.Button paste_button;
+        private System.Windows.Forms.Button exctract_bttn;
     }
 }
 

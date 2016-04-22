@@ -356,7 +356,7 @@ namespace Sanity_Archive
         }
 
 
-        #region Compression --------------------------------------------------------------------------------------------------------
+        #region Compression/Extract -----------------------------------------------------------------------------------------------------------
 
         private void compression_bttn_Click(object sender, EventArgs e)
         {
@@ -396,6 +396,8 @@ namespace Sanity_Archive
                         createZipFile.CreateEntryFromFile(fileToCompressPath, fileName);
                     }
                 }
+
+                MessageBox.Show(@"Arhive file successfully created from multiple files!");
             }
             else //In case of single selecting.
             {
@@ -424,12 +426,48 @@ namespace Sanity_Archive
                         createZipFile.CreateEntryFromFile(fileToCompressPath, fileName);
                     }
                 }
+                MessageBox.Show(@"Arhive file successfully created!");
             }
         }
 
+        private void exctract_bttn_Click(object sender, EventArgs e)
+        {
+            Decompression(filePathsInClipBoard);
+        }
 
-        #endregion Compression -----------------------------------------------------------------------------------------------------
+        private void Decompression(List<string> pathsList)
+        {
+            string extraxtionPath = "";
 
+            DirectoryInfo dirP = new DirectoryInfo(pathsList[0]);
 
+            foreach (string zipPath in pathsList)
+            {
+                if (Path.GetExtension(zipPath) == ".zip")
+                {
+                    using (ZipArchive archive = ZipFile.Open(zipPath, ZipArchiveMode.Update))
+                    {
+                        if (dirP.Parent != null)
+                        {
+                            string zipSourcePath = dirP.Parent.FullName; //Absolute filepath of the files contained in the list.
+                            string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(zipPath);
+                            extraxtionPath = zipSourcePath + @"\" + fileNameWithoutExtension;
+                        }
+                        try
+                        {
+                            archive.ExtractToDirectory(extraxtionPath);
+                        }
+                        catch (Exception)
+                        {
+                            MessageBox.Show(@"You extracted once these files. This operation is not supported.");
+                        }
+                    }
+                }
+            }
+
+            MessageBox.Show(@"Files has been extracted to separate folders.");
+        }
+
+        #endregion Decompression/Extract ------------------------------------------------------------------------------------------------------
     }
 }
