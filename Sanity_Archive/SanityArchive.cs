@@ -326,7 +326,8 @@ namespace Sanity_Archive
         {
             if (fileFolder_box.SelectedItems.Count > 1)
             {
-                MessageBox.Show("There are more than one element to be selected");
+                AttributesDialog attrDialog = new AttributesDialog(filePathsInClipBoard);
+                attrDialog.ShowDialog();
             }
             else if (fileFolder_box.SelectedItems.Count == 1)
             {
