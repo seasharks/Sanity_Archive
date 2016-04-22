@@ -358,55 +358,26 @@ namespace Sanity_Archive
 
         #region Compression/Extract -----------------------------------------------------------------------------------------------------------
 
+        #region Compression ------------------------------------------------------------------------------------------------------------------
+
         private void compression_bttn_Click(object sender, EventArgs e)
         {
-            Compress(filePathsInClipBoard);
+            Compress(path, filePathsInClipBoard);
         }
 
-        private void Compress(List<string> pathsList)
+        private void Compress(string singlePath, List<string> pathsList)
         {
-            DirectoryInfo dirP = new DirectoryInfo(pathsList[0]);
             string dirParentPath = "";
             string dirParent = "";
             int i = 0;
 
-            if (pathsList.Count > 1) //In case of multiple selecting.
+            //In case of single selecting. ----------------------------------------------------------------------------------------------
+
+            if (fileFolder_box.SelectedItems.Count == 1)
             {
-                if (dirP.Parent != null)
-                {
-                    dirParent = dirP.Parent.Name; //Name of the list's parent directory.
-                    dirParentPath = dirP.Parent.FullName; //Absolute filepath of the files contained in the list.
-                }
+                string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(singlePath); //Just the name of the file without extension.
 
-                string zipFilePath = dirParentPath + @"\" + dirParent + @".zip"; //Path and name of the destination zip file.
-
-                while (File.Exists(zipFilePath))
-                {
-                    i += 1;
-                    zipFilePath = dirParentPath + @"\" + dirParent + i + @".zip";
-                }
-
-                foreach (var fileToCompressPath in pathsList)
-                {
-                    DirectoryInfo pathInfo = new DirectoryInfo(fileToCompressPath); //Full paths and names of the files to be compressed.
-                    string fileName = pathInfo.Name; //Just the name of the file with extension.
-
-                    using (ZipArchive createZipFile = ZipFile.Open(zipFilePath, ZipArchiveMode.Update))
-                    {
-                        createZipFile.CreateEntryFromFile(fileToCompressPath, fileName);
-                    }
-                }
-
-                MessageBox.Show(@"Arhive file successfully created from multiple files!");
-            }
-            else //In case of single selecting.
-            {
-                string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(pathsList[0]); //Just the name of the file without extension.
-
-                if (dirP.Parent != null)
-                {
-                    dirParentPath = dirP.Parent.FullName; //Absolute filepath of the files contained in the list.
-                }
+                dirParentPath = Directory.GetParent(singlePath).FullName; //Absolute filepath of the files contained in the list.
 
                 string zipFilePath = dirParentPath + @"\" + fileNameWithoutExtension + @".zip"; //Path and name of the destination zip file.
 
@@ -416,19 +387,76 @@ namespace Sanity_Archive
                     zipFilePath = dirParentPath + @"\" + fileNameWithoutExtension + i + @".zip";
                 }
 
-                foreach (var fileToCompressPath in pathsList)
-                {
-                    DirectoryInfo pathInfo = new DirectoryInfo(fileToCompressPath); //Full paths and names of the files to be compressed.
-                    string fileName = pathInfo.Name; //Just the name of the file with extension.
+                string fileName = Path.GetFileName(singlePath); //Just the name of the file with extension.
 
-                    using (ZipArchive createZipFile = ZipFile.Open(zipFilePath, ZipArchiveMode.Update))
+                using (ZipArchive createZipFile = ZipFile.Open(zipFilePath, ZipArchiveMode.Update))
+                {
+                    try
                     {
-                        createZipFile.CreateEntryFromFile(fileToCompressPath, fileName);
+                        createZipFile.CreateEntryFromFile(singlePath, fileName);
+                    }
+                    catch (DirectoryNotFoundException)
+                    {
+                        MessageBox.Show(@"You can not add directories to the archive!");
                     }
                 }
+
                 MessageBox.Show(@"Arhive file successfully created!");
             }
+
+            //In case of multiple selecting. ---------------------------------------------------------------------------------------------------
+
+            if (fileFolder_box.SelectedItems.Count > 1)
+            {
+                DirectoryInfo dirP = new DirectoryInfo(pathsList[0]);
+
+                if (dirP.Parent != null)
+                {
+                    dirParent = dirP.Parent.Name; //Name of the list's parent directory.
+                    dirParentPath = dirP.Parent.FullName; //Absolute filepath of the files contained in the list.
+                }
+
+                string zipFilePaths = dirParentPath + @"\" + dirParent + @".zip";
+                    //Path and name of the destination zip file.
+
+                while (File.Exists(zipFilePaths))
+                {
+                    i += 1;
+                    zipFilePaths = dirParentPath + @"\" + dirParent + i + @".zip";
+                }
+
+                foreach (var fileToCompressPath in pathsList)
+                {
+                    DirectoryInfo pathInfo = new DirectoryInfo(fileToCompressPath);
+                        //Full paths and names of the files to be compressed.
+                    string fileNames = pathInfo.Name; //Just the name of the file with extension.
+
+                    using (ZipArchive createZipFile = ZipFile.Open(zipFilePaths, ZipArchiveMode.Update))
+                    {
+                        try
+                        {
+                            createZipFile.CreateEntryFromFile(fileToCompressPath, fileNames);
+                        }
+                        catch (DirectoryNotFoundException)
+                        {
+                            MessageBox.Show(@"You can not add directories to the archive!");
+                        }
+                    }
+                }
+                MessageBox.Show(@"Arhive file successfully created from multiple files!");
+            }
+
+            //In case of selection is ZERO. ---------------------------------------------------------------------------------------
+
+            if (fileFolder_box.SelectedItems.Count == 0)
+            {
+                MessageBox.Show(@"No items selected!");
+            }
         }
+
+        #endregion Compression ---------------------------------------------------------------------------------------------------------------
+
+        #region Decompression/Extract ------------------------------------------------------------------------------------------------------
 
         private void exctract_bttn_Click(object sender, EventArgs e)
         {
@@ -469,5 +497,7 @@ namespace Sanity_Archive
         }
 
         #endregion Decompression/Extract ------------------------------------------------------------------------------------------------------
+
+        #endregion Compression/Extract --------------------------------------------------------------------------------------------------------
     }
 }
