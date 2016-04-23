@@ -55,39 +55,28 @@ namespace Sanity_Archive
 
         private void encryption_bttn_Click(object sender, EventArgs e)
         {
-            //string path;
-            //if (fileFolder_box.SelectedItems.Count > 1)
-            //{
-            //    MessageBox.Show("There are more than one element to be selected");
-            //}
-            //else if (fileFolder_box.SelectedItems.Count == 1)
-            //{
-            //    path = currentPath + fileFolder_box.GetItemText(fileFolder_box.SelectedItem);
+            if (!File.Exists("encryption.key")) key = GenerateKey();
+            else
+            {
+                FileStream fsInput = new FileStream("encryption.key", FileMode.Open, FileAccess.Read);
+                key = new StreamReader(fsInput).ReadToEnd();
+                Console.WriteLine(key);
+            }
 
-                if (!File.Exists("encryption.key")) key = GenerateKey();
-                else
-                {
-                    FileStream fsInput = new FileStream("encryption.key", FileMode.Open, FileAccess.Read);
-                    key = new StreamReader(fsInput).ReadToEnd();
-                    Console.WriteLine(key);
-                }
-
-                if (path.EndsWith(".enc"))
-                {
-                    string pathOriginal = path;
-                    string decryptedFileName = path.Remove(path.Length - 4);
-                    DecryptFile(path, decryptedFileName, key);
-                    File.Delete(pathOriginal);
-                    FillFileFolderBox(currentPath);
-                }
-                else
-                { 
-                    EncryptFile(path, path + ".enc", key);
-                   File.Delete(path);
-                    FillFileFolderBox(currentPath);
-                }
-            //}
-
+            if (path.EndsWith(".enc"))
+            {
+                string pathOriginal = path;
+                string decryptedFileName = path.Remove(path.Length - 4);
+                DecryptFile(path, decryptedFileName, key);
+                File.Delete(pathOriginal);
+                FillFileFolderBox(currentPath);
+            }
+            else
+            { 
+                EncryptFile(path, path + ".enc", key);
+                File.Delete(path);
+                FillFileFolderBox(currentPath);
+            }
         }
 
         string GenerateKey()
@@ -304,7 +293,7 @@ namespace Sanity_Archive
 
         private void search_bttn_Click(object sender, EventArgs e)
         {
-            Search s = new Search();
+            Search s = new Search(currentPath);
             s.Show();
         }
 
