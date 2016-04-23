@@ -178,6 +178,7 @@ namespace Sanity_Archive
                 {
                     File.SetAttributes(_filePath, RemoveAttribute(File.GetAttributes(_filePath), FileAttributes.ReadOnly));
                 }
+
                 if ((_attributes & FileAttributes.Directory) == FileAttributes.Directory)
                 {
                     if (_createdDate != created_dateTimePicker.Value)
@@ -189,12 +190,19 @@ namespace Sanity_Archive
                 }
                 else
                 {
+                    bool isReadOnly = (File.GetAttributes(_filePath) & FileAttributes.ReadOnly).ToString() == "ReadOnly";
+                    if (isReadOnly)
+                        File.SetAttributes(_filePath, RemoveAttribute(File.GetAttributes(_filePath), FileAttributes.ReadOnly));
+
                     if (_createdDate != created_dateTimePicker.Value)
                         File.SetCreationTime(_filePath, created_dateTimePicker.Value);
                     if (_modifiedDate != modified_dateTimePicker.Value)
                         File.SetLastWriteTime(_filePath, modified_dateTimePicker.Value);
                     if (_accessedDate != accessed_dateTimePicker.Value)
                         File.SetLastAccessTime(_filePath, accessed_dateTimePicker.Value);
+
+                    if (isReadOnly)
+                        File.SetAttributes(_filePath, File.GetAttributes(_filePath) | FileAttributes.ReadOnly);
                 }
             }
             catch (UnauthorizedAccessException)
@@ -278,7 +286,14 @@ namespace Sanity_Archive
                         if ((_attributesOfFiles[i] & FileAttributes.Directory) == FileAttributes.Directory)
                             Directory.SetCreationTime(_filePaths[i], created_dateTimePicker.Value);
                         else
+                        {
+                            bool isReadOnly = (File.GetAttributes(_filePaths[i]) & FileAttributes.ReadOnly).ToString() == "ReadOnly";
+                            if (isReadOnly)
+                                File.SetAttributes(_filePaths[i], RemoveAttribute(File.GetAttributes(_filePaths[i]), FileAttributes.ReadOnly));
                             File.SetCreationTime(_filePaths[i], created_dateTimePicker.Value);
+                            if (isReadOnly)
+                                File.SetAttributes(_filePaths[i], File.GetAttributes(_filePaths[i]) | FileAttributes.ReadOnly);
+                        }
                     }
                 }
                 if (_modifiedDate != modified_dateTimePicker.Value)
@@ -288,7 +303,14 @@ namespace Sanity_Archive
                         if ((_attributesOfFiles[i] & FileAttributes.Directory) == FileAttributes.Directory)
                             Directory.SetLastWriteTime(_filePaths[i], modified_dateTimePicker.Value);
                         else
+                        {
+                            bool isReadOnly = (File.GetAttributes(_filePaths[i]) & FileAttributes.ReadOnly).ToString() == "ReadOnly";
+                            if (isReadOnly)
+                                File.SetAttributes(_filePaths[i], RemoveAttribute(File.GetAttributes(_filePaths[i]), FileAttributes.ReadOnly));
                             File.SetLastWriteTime(_filePaths[i], modified_dateTimePicker.Value);
+                            if (isReadOnly)
+                                File.SetAttributes(_filePaths[i], File.GetAttributes(_filePaths[i]) | FileAttributes.ReadOnly);
+                        }
                     }
                 }
                 if (_accessedDate != accessed_dateTimePicker.Value)
@@ -298,7 +320,14 @@ namespace Sanity_Archive
                         if ((_attributesOfFiles[i] & FileAttributes.Directory) == FileAttributes.Directory)
                             Directory.SetLastAccessTime(_filePaths[i], accessed_dateTimePicker.Value);
                         else
+                        {
+                            bool isReadOnly = (File.GetAttributes(_filePaths[i]) & FileAttributes.ReadOnly).ToString() == "ReadOnly";
+                            if (isReadOnly)
+                                File.SetAttributes(_filePaths[i], RemoveAttribute(File.GetAttributes(_filePaths[i]), FileAttributes.ReadOnly));
                             File.SetLastAccessTime(_filePaths[i], accessed_dateTimePicker.Value);
+                            if (isReadOnly)
+                                File.SetAttributes(_filePaths[i], File.GetAttributes(_filePaths[i]) | FileAttributes.ReadOnly);
+                        }
                     }
                 }
             }
