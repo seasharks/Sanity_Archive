@@ -55,6 +55,8 @@ namespace Sanity_Archive
 
         private void encryption_bttn_Click(object sender, EventArgs e)
         {
+            // path = currentPath + fileFolder_box.GetItemText(fileFolder_box.SelectedItem);
+
             if (!File.Exists("encryption.key")) key = GenerateKey();
             else
             {
@@ -348,6 +350,11 @@ namespace Sanity_Archive
             {
                 path = currentPath + fileFolder_box.GetItemText(fileFolder_box.SelectedItem);
 
+                if (fileFolder_box.SelectedItem.ToString() == "..")
+                {
+                    size_lbl.Text = "0,00 KB";
+                    return;
+                }
             }
 
             CalculateSize();
