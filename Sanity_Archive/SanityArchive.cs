@@ -335,7 +335,7 @@ namespace Sanity_Archive
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show(ex.Message + " multiple selection " + ex.StackTrace);
+                        MessageBox.Show(ex.Message);
                     }
                 }
             }
@@ -350,7 +350,7 @@ namespace Sanity_Archive
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message + " single selection " + ex.StackTrace);
+                    MessageBox.Show(ex.Message);
                 }
             }
 
