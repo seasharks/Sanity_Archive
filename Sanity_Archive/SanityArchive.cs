@@ -316,6 +316,56 @@ namespace Sanity_Archive
         }
 
 #region Copy, Move and Paste
+        
+        private void copy_button_Click(object sender, EventArgs e)
+        {
+            PutSelectedItemsInClipboard();
+            dataMovingInPogress = false;
+        }
+
+        private void move_button_Click(object sender, EventArgs e)
+        {
+            PutSelectedItemsInClipboard();
+            dataMovingInPogress = true;
+        }
+
+        private void paste_button_Click(object sender, EventArgs e)
+        {
+            if (Clipboard.ContainsFileDropList())
+            {
+                StringCollection pathsFromClipBoard = Clipboard.GetFileDropList();
+                foreach (string sourcePath in pathsFromClipBoard)
+                {
+                    try
+                    {
+                        FileAttributes attr = File.GetAttributes(sourcePath);
+                        if (attr.HasFlag(FileAttributes.Directory)) RelocateFolder(sourcePath, currentPath, dataMovingInPogress);
+                        else RelocateFile(sourcePath, currentPath, dataMovingInPogress);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message + " multiple selection " + ex.StackTrace);
+                    }
+                }
+            }
+            else if (Clipboard.ContainsText())
+            {
+                string sourcePath = Clipboard.GetText();
+                try
+                {
+                    FileAttributes attr = File.GetAttributes(sourcePath);
+                    if (attr.HasFlag(FileAttributes.Directory)) RelocateFolder(sourcePath, currentPath, dataMovingInPogress);
+                    else RelocateFile(sourcePath, currentPath, dataMovingInPogress);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message + " single selection " + ex.StackTrace);
+                }
+            }
+
+            FillFileFolderBox(currentPath);
+            dataMovingInPogress = false;
+        }
 
         private void PutSelectedItemsInClipboard()
         {
@@ -338,40 +388,53 @@ namespace Sanity_Archive
             }
         }
 
-        private void copy_button_Click(object sender, EventArgs e)
+        private void RelocateFile(string sourceFilePath, string destinationFolderPath, bool movingNotCopying)
         {
-            PutSelectedItemsInClipboard();
-            dataMovingInPogress = false;
-        }
-
-        private void move_button_Click(object sender, EventArgs e)
-        {
-            PutSelectedItemsInClipboard();
-            dataMovingInPogress = true;
-        }
-
-        private void paste_button_Click(object sender, EventArgs e)
-        {
-            StringCollection pathsFromClipBoard = Clipboard.GetFileDropList();
-            
-            try
+            FileInfo fileInClipBoard = new FileInfo(sourceFilePath);
+            string destinationPath = destinationFolderPath + fileInClipBoard.Name;
+            if (File.Exists(destinationPath))
             {
-                foreach (string item in pathsFromClipBoard)
-                {
-                    FileInfo data = new FileInfo(item);
-                    string destinationPath = currentPath + data.Name;
-                    if (dataMovingInPogress) File.Move(item, destinationPath);
-                    else File.Copy(item, destinationPath);
-                }
-
-                dataMovingInPogress = false;
+                string msg = String.Format("{0} already exists. Would you like to overwrite?", destinationPath);
+                MessageBoxButtons bttns = MessageBoxButtons.YesNo;
+                DialogResult result = MessageBox.Show(msg, "File already exists", bttns);
+                if (result == DialogResult.No) return;
+                else File.Delete(destinationPath);
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
+            if (movingNotCopying) fileInClipBoard.MoveTo(destinationPath);
+            else fileInClipBoard.CopyTo(destinationPath);
         }
 
+        private void RelocateFolder(string sourceFolderPath, string destinationFolderPath, bool movingNotCopying)
+        {
+            DirectoryInfo folderInClipBoard = new DirectoryInfo(sourceFolderPath);
+            string destinationPath = destinationFolderPath + folderInClipBoard.Name;
+            if (Directory.Exists(destinationPath))
+            {
+                string msg = String.Format("{0} already exists. Would you like to overwrite?", destinationPath);
+                MessageBoxButtons bttns = MessageBoxButtons.YesNo;
+                DialogResult result = MessageBox.Show(msg, "Folder already exists", bttns);
+                if (result == DialogResult.No) return;
+                else Directory.Delete(destinationPath, true);
+            }
+            Directory.CreateDirectory(destinationPath);
+
+            DirectoryInfo[] folders = folderInClipBoard.GetDirectories();
+            FileInfo[] files = folderInClipBoard.GetFiles();
+
+            foreach (FileInfo file in files)
+            {
+                string temppath = Path.Combine(destinationPath, file.Name);
+                file.CopyTo(temppath, false);
+            }
+
+            foreach (DirectoryInfo subFolder in folders)
+            {
+                destinationPath += "\\";
+                RelocateFolder(subFolder.FullName, destinationPath, movingNotCopying);
+            }
+
+            if (movingNotCopying) folderInClipBoard.Delete(true);
+        }
 
         #endregion
 
