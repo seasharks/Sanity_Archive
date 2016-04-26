@@ -5,13 +5,13 @@
       ​
          Name            : sea-sharks
       ​
-         Last Author     : Andras Kesik
+         Last Author     : Hunor Csaszar
       ​
          Language        : C#
       ​
-         Creation Date   :  20.04.2016
+         Creation Date   :  21.04.2016
       ​
-         Description     : file and folder browsing feature
+         Description     : copy and move files
       ​
       ​
                      Copyright (C) Codecool Kft 2015-2016 All Rights Reserved
@@ -35,7 +35,8 @@ using System.IO;
 using System.IO.Compression;
 using System.Runtime.InteropServices;
 using System.Threading;
-
+using System.Collections.Specialized;
+#endregion
 
 namespace Sanity_Archive
 {
@@ -45,6 +46,7 @@ namespace Sanity_Archive
         private string key = null;
         List<string> filePathsInClipBoard = new List<string>();
         private string path;
+        private bool dataMovingInPogress = false;
 
         public SanityArchive()
         {
@@ -56,14 +58,7 @@ namespace Sanity_Archive
 
         private void encryption_bttn_Click(object sender, EventArgs e)
         {
-            //string path;
-            //if (fileFolder_box.SelectedItems.Count > 1)
-            //{
-            //    MessageBox.Show("There are more than one element to be selected");
-            //}
-            //else if (fileFolder_box.SelectedItems.Count == 1)
-            //{
-            //    path = currentPath + fileFolder_box.GetItemText(fileFolder_box.SelectedItem);
+            // path = currentPath + fileFolder_box.GetItemText(fileFolder_box.SelectedItem);
 
                 if (!File.Exists("encryption.key")) key = GenerateKey();
                 else
@@ -87,8 +82,6 @@ namespace Sanity_Archive
                    File.Delete(path);
                     FillFileFolderBox(currentPath);
                 }
-            //}
-
         }
 
         string GenerateKey()
@@ -298,15 +291,15 @@ namespace Sanity_Archive
 
         #endregion
 
-        private void search_bttn_Click(object sender, EventArgs e)
+        private void compression_bttn_Click(object sender, EventArgs e)
         {
-            Search s = new Search();
-            s.Show();
+
         }
 
-        private void copy_button_Click(object sender, EventArgs e)
+        private void search_bttn_Click(object sender, EventArgs e)
         {
-
+            Search s = new Search(currentPath);
+            s.Show();
         }
 
         private void size_lbl_Click(object sender, EventArgs e)
@@ -314,6 +307,126 @@ namespace Sanity_Archive
 
         }
 
+#region Copy, Move and Paste
+        
+        private void copy_button_Click(object sender, EventArgs e)
+        {
+            PutSelectedItemsInClipboard();
+            dataMovingInPogress = false;
+        }
+
+        private void move_button_Click(object sender, EventArgs e)
+        {
+            PutSelectedItemsInClipboard();
+            dataMovingInPogress = true;
+        }
+
+        private void paste_button_Click(object sender, EventArgs e)
+        {
+            if (Clipboard.ContainsFileDropList())
+            {
+                StringCollection pathsFromClipBoard = Clipboard.GetFileDropList();
+                foreach (string sourcePath in pathsFromClipBoard)
+                {
+                    try
+                    {
+                        FileAttributes attr = File.GetAttributes(sourcePath);
+                        if (attr.HasFlag(FileAttributes.Directory)) RelocateFolder(sourcePath, currentPath, dataMovingInPogress);
+                        else RelocateFile(sourcePath, currentPath, dataMovingInPogress);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message);
+                    }
+                }
+            }
+            else if (Clipboard.ContainsText())
+            {
+                string sourcePath = Clipboard.GetText();
+                try
+                {
+                    FileAttributes attr = File.GetAttributes(sourcePath);
+                    if (attr.HasFlag(FileAttributes.Directory)) RelocateFolder(sourcePath, currentPath, dataMovingInPogress);
+                    else RelocateFile(sourcePath, currentPath, dataMovingInPogress);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            }
+
+            FillFileFolderBox(currentPath);
+            dataMovingInPogress = false;
+        }
+
+        private void PutSelectedItemsInClipboard()
+        {
+            if (fileFolder_box.SelectedItems.Count > 1)
+            {
+                StringCollection pathsInClipBoard = new StringCollection();
+                foreach (string path in filePathsInClipBoard)
+                {
+                    pathsInClipBoard.Add(path);
+                }
+                Clipboard.SetFileDropList(pathsInClipBoard);
+            }
+            else if (fileFolder_box.SelectedItems.Count == 1)
+            {
+                Clipboard.SetText(path);
+            }
+            else
+            {
+                MessageBox.Show("Nothing is selected", "Failure", MessageBoxButtons.OK);
+            }
+        }
+
+        private void RelocateFile(string sourceFilePath, string destinationFolderPath, bool movingNotCopying)
+        {
+            FileInfo fileInClipBoard = new FileInfo(sourceFilePath);
+            string destinationPath = destinationFolderPath + fileInClipBoard.Name;
+            if (File.Exists(destinationPath))
+            {
+                string msg = String.Format("{0} already exists. Would you like to overwrite?", destinationPath);
+                MessageBoxButtons bttns = MessageBoxButtons.YesNo;
+                DialogResult result = MessageBox.Show(msg, "File already exists", bttns);
+                if (result == DialogResult.No) return;
+                else File.Delete(destinationPath);
+            }
+            if (movingNotCopying) fileInClipBoard.MoveTo(destinationPath);
+            else fileInClipBoard.CopyTo(destinationPath);
+        }
+
+        private void RelocateFolder(string sourceFolderPath, string destinationFolderPath, bool movingNotCopying)
+        {
+            DirectoryInfo folderInClipBoard = new DirectoryInfo(sourceFolderPath);
+            string destinationPath = destinationFolderPath + folderInClipBoard.Name;
+            if (Directory.Exists(destinationPath))
+            {
+                string msg = String.Format("{0} already exists. Would you like to overwrite?", destinationPath);
+                MessageBoxButtons bttns = MessageBoxButtons.YesNo;
+                DialogResult result = MessageBox.Show(msg, "Folder already exists", bttns);
+                if (result == DialogResult.No) return;
+                else Directory.Delete(destinationPath, true);
+            }
+            Directory.CreateDirectory(destinationPath);
+
+            DirectoryInfo[] folders = folderInClipBoard.GetDirectories();
+            FileInfo[] files = folderInClipBoard.GetFiles();
+
+            foreach (FileInfo file in files)
+        {
+                string temppath = Path.Combine(destinationPath, file.Name);
+                file.CopyTo(temppath, false);
+            }
+
+            foreach (DirectoryInfo subFolder in folders)
+            {
+                destinationPath += "\\";
+                RelocateFolder(subFolder.FullName, destinationPath, movingNotCopying);
+        }
+
+            if (movingNotCopying) folderInClipBoard.Delete(true);
+        }
 
         #endregion
 
@@ -322,7 +435,8 @@ namespace Sanity_Archive
         {
             if (fileFolder_box.SelectedItems.Count > 1)
             {
-                MessageBox.Show("There are more than one element to be selected");
+                AttributesDialog attrDialog = new AttributesDialog(filePathsInClipBoard);
+                attrDialog.ShowDialog();
             }
             else if (fileFolder_box.SelectedItems.Count == 1)
             {
@@ -348,11 +462,127 @@ namespace Sanity_Archive
                     string fileName = item.ToString();
                     filePathsInClipBoard.Add(currentPath + fileName);
                 }
+
             }
             else if (fileFolder_box.SelectedItems.Count == 1)
             {
                 path = currentPath + fileFolder_box.GetItemText(fileFolder_box.SelectedItem);
+
+                if (fileFolder_box.SelectedItem.ToString() == "..")
+                {
+                    size_lbl.Text = "0,00 KB";
+                    return;
+                }
             }
+
+            CalculateSize();
+
+        }
+
+#region Calculate Size
+        public void CalculateSize()
+        {
+            size_lbl.Text = "Loading size. . .";
+            long size = 0;
+            //FOR ONE SELECTED ITEM
+            if (fileFolder_box.SelectedItems.Count == 1)
+            {
+                FileAttributes attr = File.GetAttributes(path);
+                //CHECK IF DIRECTORY
+                if ((attr & FileAttributes.Directory) == FileAttributes.Directory)
+                {
+                    new Thread(() =>
+                    {
+                        Thread.CurrentThread.IsBackground = true;
+                        try
+                        {
+                            if (!path.EndsWith(".."))
+                            {
+                                DirectoryInfo directoryInfo = new DirectoryInfo(path);
+                                double dirSize = DirSize(directoryInfo)/1024.0;
+                                RefreshSizeLabel(dirSize);
+                            }
+                        }
+                        catch (Exception)
+                        {
+                            MessageBox.Show("You don't have permission to access some elements in that directory!");
+                            size_lbl.Text = "Denied";
+                        }
+                    }).Start();
+                }
+                else
+                {
+                    if (!path.EndsWith(".."))
+                    {
+                        double fileSize = new FileInfo(path).Length/1024.0;
+                        RefreshSizeLabel(fileSize);
+                    }
+                }
+            }
+            //FOR MULTIPLE SELECTION
+            else
+            {
+                new Thread(() =>
+                {
+                    //Thread.CurrentThread.IsBackground = true;
+                    foreach (string filePath in filePathsInClipBoard)
+                    {
+                        FileAttributes attr = File.GetAttributes(path);
+                        //CHECK IF DIRECTORY
+                        if (!path.EndsWith(".."))
+                        {
+                            if ((attr & FileAttributes.Directory) == FileAttributes.Directory)
+                            {
+                                    try
+                                    {
+                                            DirectoryInfo directoryInfo = new DirectoryInfo(filePath);
+                                            size += DirSize(directoryInfo);
+                                    }
+                                    catch (Exception)
+                                    {
+                                    MessageBox.Show("You don't have permission to access some elements in that directory!");
+                                    size_lbl.Text = "Denied";
+                                    }  
+                            }
+                            else
+                            {
+                                size += new FileInfo(filePath).Length;
+                            }
+                        }
+
+                    }
+                    double sizeOfFiles = size / 1024.0;
+                    RefreshSizeLabel(sizeOfFiles); 
+                }).Start();
+            }
+            
+        }
+        private long DirSize(DirectoryInfo d)
+        {
+            long size = 0;
+            // Add file sizes.
+            try
+            {
+                FileInfo[] fis = d.GetFiles();
+                foreach (FileInfo fi in fis)
+                {
+                    size += fi.Length;
+                }
+                // Add subdirectory sizes.
+                DirectoryInfo[] dis = d.GetDirectories();
+                foreach (DirectoryInfo di in dis)
+                {
+                    size += DirSize(di);
+                }
+            }
+            catch { size_lbl.Text = "Loading size. . .  something went wrong"; }
+            return size;
+            }
+        private void RefreshSizeLabel(double size)
+        {
+            if (size < 1024) size_lbl.Text = $"{size:F2} KB";
+            else if (size < 1048576) size_lbl.Text = $"{size / 1024:F2} MB";
+            else size_lbl.Text = $"{size / 1048576:F2} GB";
         }
 
 

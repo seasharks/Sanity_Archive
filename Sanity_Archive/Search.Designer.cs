@@ -116,7 +116,6 @@
             this.MinimumSize = new System.Drawing.Size(381, 294);
             this.Name = "Search";
             this.Text = "Search";
-            this.Load += new System.EventHandler(this.Search_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
