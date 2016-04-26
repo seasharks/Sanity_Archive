@@ -31,7 +31,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Security;
 using System.Security.Cryptography;
-using System.IO;
+//using System.IO;
 using System.IO.Compression;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -290,11 +290,6 @@ namespace Sanity_Archive
         }
 
         #endregion
-
-        private void compression_bttn_Click(object sender, EventArgs e)
-        {
-
-        }
 
         private void search_bttn_Click(object sender, EventArgs e)
         {
@@ -585,7 +580,7 @@ namespace Sanity_Archive
             else size_lbl.Text = $"{size / 1048576:F2} GB";
         }
 
-
+        #endregion
 
         #region Compression/Extract -----------------------------------------------------------------------------------------------------------
 
@@ -593,7 +588,24 @@ namespace Sanity_Archive
 
         private void compression_bttn_Click(object sender, EventArgs e)
         {
-            Compress(path, filePathsInClipBoard);
+            try
+            {
+                Compress(path, filePathsInClipBoard);
+
+                if (fileFolder_box.SelectedItems.Count == 1)
+                {
+                    MessageBox.Show(@"Arhive file successfully created!");
+                }
+                else if (fileFolder_box.SelectedItems.Count > 1)
+                {
+                    MessageBox.Show(@"Arhive file successfully created from multiple files!");
+                }
+                FillFileFolderBox(currentPath);
+            }
+            catch (DirectoryNotFoundException)
+            {
+                MessageBox.Show(@"You can not add directories to the archive!");
+            }
         }
 
         private void Compress(string singlePath, List<string> pathsList)
@@ -606,11 +618,14 @@ namespace Sanity_Archive
 
             if (fileFolder_box.SelectedItems.Count == 1)
             {
-                string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(singlePath); //Just the name of the file without extension.
+                string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(singlePath);
+                    //Just the name of the file without extension.
 
-                dirParentPath = Directory.GetParent(singlePath).FullName; //Absolute filepath of the files contained in the list.
+                dirParentPath = Directory.GetParent(singlePath).FullName;
+                    //Absolute filepath of the files contained in the list.
 
-                string zipFilePath = dirParentPath + @"\" + fileNameWithoutExtension + @".zip"; //Path and name of the destination zip file.
+                string zipFilePath = dirParentPath + @"\" + fileNameWithoutExtension + @".zip";
+                    //Path and name of the destination zip file.
 
                 while (File.Exists(zipFilePath))
                 {
@@ -622,15 +637,7 @@ namespace Sanity_Archive
 
                 using (ZipArchive createZipFile = ZipFile.Open(zipFilePath, ZipArchiveMode.Update))
                 {
-                    try
-                    {
-                        createZipFile.CreateEntryFromFile(singlePath, fileName);
-                        MessageBox.Show(@"Arhive file successfully created!");
-                    }
-                    catch (DirectoryNotFoundException)
-                    {
-                        MessageBox.Show(@"You can not add directories to the archive!");
-                    }
+                    createZipFile.CreateEntryFromFile(singlePath, fileName);
                 }
             }
 
@@ -662,15 +669,7 @@ namespace Sanity_Archive
 
                     using (ZipArchive createZipFile = ZipFile.Open(zipFilePaths, ZipArchiveMode.Update))
                     {
-                        try
-                        {
-                            createZipFile.CreateEntryFromFile(fileToCompressPath, fileNames);
-                            MessageBox.Show(@"Arhive file successfully created from multiple files!");
-                        }
-                        catch (DirectoryNotFoundException)
-                        {
-                            MessageBox.Show(@"You can not add directories to the archive!");
-                        }
+                        createZipFile.CreateEntryFromFile(fileToCompressPath, fileNames);
                     }
                 }
             }
@@ -689,7 +688,24 @@ namespace Sanity_Archive
 
         private void exctract_bttn_Click(object sender, EventArgs e)
         {
-            Decompression(path, filePathsInClipBoard);
+            try
+            {
+                Decompression(path, filePathsInClipBoard);
+
+                if (fileFolder_box.SelectedItems.Count == 1)
+                {
+                    MessageBox.Show(@"File(s) has been extracted to separate folder.");
+                }
+                else if (fileFolder_box.SelectedItems.Count > 1)
+                {
+                    MessageBox.Show(@"File(s) has been extracted to separate folders.");
+                }
+                FillFileFolderBox(currentPath);
+            }
+            catch (Exception)
+            {
+                MessageBox.Show(@"You extracted once these files. This operation is not supported.");
+            }
         }
 
         private void Decompression(string singlePath, List<string> pathsList)
@@ -708,15 +724,7 @@ namespace Sanity_Archive
                         string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(singlePath);
                         zipExtractionPath = parentPath + @"\" + fileNameWithoutExtension;
 
-                        try
-                        {
-                            archive.ExtractToDirectory(zipExtractionPath);
-                            MessageBox.Show(@"Files has been extracted to separate folders.");
-                        }
-                        catch (Exception )
-                        {
-                            MessageBox.Show(@"You extracted once these files. This operation is not supported.");
-                        }
+                        archive.ExtractToDirectory(zipExtractionPath);
                     }
                 }
                 else
@@ -743,15 +751,7 @@ namespace Sanity_Archive
                                 string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(zipPath);
                                 zipExtractionPath = zipSourcePath + @"\" + fileNameWithoutExtension;
                             }
-                            try
-                            {
                                 archive.ExtractToDirectory(zipExtractionPath);
-                                MessageBox.Show(@"Files has been extracted to separate folders.");
-                            }
-                            catch (Exception)
-                            {
-                                MessageBox.Show(@"You extracted once these files. This operation is not supported.");
-                            }
                         }
                     }
                     else
