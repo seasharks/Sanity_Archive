@@ -33,6 +33,9 @@
             // 
             // text_reader_box
             // 
+            this.text_reader_box.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.text_reader_box.Location = new System.Drawing.Point(12, 12);
             this.text_reader_box.Name = "text_reader_box";
             this.text_reader_box.ReadOnly = true;
