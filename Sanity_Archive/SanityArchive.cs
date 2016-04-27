@@ -1,4 +1,5 @@
 ﻿#region File Header
+
 /*[ Compilation unit ----------------------------------------------------------
       ​
          Component       : SanityArchive.cs
@@ -18,8 +19,11 @@
       ​
       -----------------------------------------------------------------------------*/
 /*] END */
+
 #endregion File Header
-#region Used Namespaces ---------------------------------------------------------------------------
+
+#region Used Namespaces -------------------------------------------------------------------------------------------------------------
+
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -36,17 +40,18 @@ using System.IO.Compression;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Collections.Specialized;
-#endregion
+
+#endregion Used Namespaces ----------------------------------------------------------------------------------------------------------
 
 namespace Sanity_Archive
 {
     public partial class SanityArchive : Form
     {
-        string currentPath;
-        private string key = null;
-        List<string> filePathsInClipBoard = new List<string>();
-        private string path;
-        private bool dataMovingInPogress = false;
+        private string _currentPath;
+        private string _key;
+        public List<string> FilePathsInClipBoard { get; } = new List<string>();
+        private string _path;
+        private bool _dataMovingInPogress;
 
         public SanityArchive()
         {
@@ -54,33 +59,66 @@ namespace Sanity_Archive
 
         }
 
-#region Encrypt
+        private void search_bttn_Click(object sender, EventArgs e)
+        {
+            Search s = new Search(_currentPath);
+            s.Show();
+        }
+
+        private void fileFolder_box_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (fileFolder_box.SelectedItems.Count > 1)
+            {
+                FilePathsInClipBoard.Clear();
+                foreach (object item in fileFolder_box.SelectedItems)
+                {
+                    string fileName = item.ToString();
+                    FilePathsInClipBoard.Add(_currentPath + fileName);
+                }
+
+            }
+            else if (fileFolder_box.SelectedItems.Count == 1)
+            {
+                _path = _currentPath + fileFolder_box.GetItemText(fileFolder_box.SelectedItem);
+
+                if (fileFolder_box.SelectedItem.ToString() == "..")
+                {
+                    size_lbl.Text = "0,00 KB";
+                    return;
+                }
+            }
+
+            CalculateSize();
+
+        }
+
+        #region Encrypt/Decrypt -----------------------------------------------------------------------------------------------------
 
         private void encryption_bttn_Click(object sender, EventArgs e)
         {
-            // path = currentPath + fileFolder_box.GetItemText(fileFolder_box.SelectedItem);
+            // _path = _currentPath + fileFolder_box.GetItemText(fileFolder_box.SelectedItem);
 
-                if (!File.Exists("encryption.key")) key = GenerateKey();
+                if (!File.Exists("encryption._key")) _key = GenerateKey();
                 else
                 {
-                    FileStream fsInput = new FileStream("encryption.key", FileMode.Open, FileAccess.Read);
-                    key = new StreamReader(fsInput).ReadToEnd();
-                    Console.WriteLine(key);
+                    FileStream fsInput = new FileStream("encryption._key", FileMode.Open, FileAccess.Read);
+                    _key = new StreamReader(fsInput).ReadToEnd();
+                    Console.WriteLine(_key);
                 }
 
-                if (path.EndsWith(".enc"))
+                if (_path.EndsWith(".enc"))
                 {
-                    string pathOriginal = path;
-                    string decryptedFileName = path.Remove(path.Length - 4);
-                    DecryptFile(path, decryptedFileName, key);
+                    string pathOriginal = _path;
+                    string decryptedFileName = _path.Remove(_path.Length - 4);
+                    DecryptFile(_path, decryptedFileName, _key);
                     File.Delete(pathOriginal);
-                    FillFileFolderBox(currentPath);
+                    FillFileFolderBox(_currentPath);
                 }
                 else
                 { 
-                    EncryptFile(path, path + ".enc", key);
-                   File.Delete(path);
-                    FillFileFolderBox(currentPath);
+                    EncryptFile(_path, _path + ".enc", _key);
+                   File.Delete(_path);
+                    FillFileFolderBox(_currentPath);
                 }
         }
 
@@ -89,12 +127,12 @@ namespace Sanity_Archive
             // Create an instance of Symetric Algorithm. Key and IV is generated automatically.
             DESCryptoServiceProvider desCrypto = (DESCryptoServiceProvider) DESCryptoServiceProvider.Create();
             string key = ASCIIEncoding.ASCII.GetString(desCrypto.Key);
-            StreamWriter keyWriter = new StreamWriter("encryption.key");
+            StreamWriter keyWriter = new StreamWriter("encryption._key");
             keyWriter.Write(key);
             keyWriter.Flush();
             keyWriter.Close();
 
-            // Use the Automatically generated key for Encryption. 
+            // Use the Automatically generated _key for Encryption. 
             return key;
         }
 
@@ -105,7 +143,7 @@ namespace Sanity_Archive
             FileStream fsEncrypted = new FileStream(sOutputFilename, FileMode.Create, FileAccess.Write);
             //decryption technology meghatározsa
             DESCryptoServiceProvider DES = new DESCryptoServiceProvider();
-            //key és vektor beállítása
+            //_key és vektor beállítása
             DES.Key = ASCIIEncoding.ASCII.GetBytes(sKey);
             DES.IV = ASCIIEncoding.ASCII.GetBytes(sKey);
             //obtain an encrypting object 
@@ -125,9 +163,9 @@ namespace Sanity_Archive
         static void DecryptFile(string sInputFilename, string sOutputFilename, string sKey)
         {
             DESCryptoServiceProvider DES = new DESCryptoServiceProvider();
-            //A 64 bit key and IV is required for this provider.
+            //A 64 bit _key and IV is required for this provider.
 
-            //Set secret key For DES algorithm.
+            //Set secret _key For DES algorithm.
             DES.Key = ASCIIEncoding.ASCII.GetBytes(sKey);
             DES.IV = ASCIIEncoding.ASCII.GetBytes(sKey);
 
@@ -150,10 +188,10 @@ namespace Sanity_Archive
             return attributes & ~attributesToRemove;
         }
 
-#endregion
+        #endregion Encrypt/Decrypt --------------------------------------------------------------------------------------------------
 
-        #region Directory and File Browser
-        
+        #region Directory and File Browser ------------------------------------------------------------------------------------------
+
         private void SanityArchive_Load(object sender, EventArgs e)
         {
             DriveInfo[] drives = DriveInfo.GetDrives();
@@ -169,7 +207,7 @@ namespace Sanity_Archive
             try
             {
                 FillFileFolderBox(drives_box.Text.Substring(0, 3));
-                path_box.Text = currentPath;
+                path_box.Text = _currentPath;
             }
             catch (Exception ex)
             {
@@ -213,21 +251,21 @@ namespace Sanity_Archive
         }
         
         private void OpenListBoxItem()
-        // collects double-clicked or entered file or folder path and call HandleFileOrFolder with it
+        // collects double-clicked or entered file or folder _path and call HandleFileOrFolder with it
         {
             try
             {
                 string launchedItemPath;
                 if (fileFolder_box.SelectedItem.ToString() == "..")
                 {
-                    string currentPathWithoutEndingSlash = currentPath.Remove(currentPath.Length - 1);
+                    string currentPathWithoutEndingSlash = _currentPath.Remove(_currentPath.Length - 1);
                     DirectoryInfo parentOfCurrentDir = Directory.GetParent(currentPathWithoutEndingSlash);
                     string parentPath = parentOfCurrentDir.ToString();
                     launchedItemPath = parentPath.EndsWith("\\") ? parentPath : parentPath + "\\";
                 }
                 else
                 {
-                    launchedItemPath = currentPath + fileFolder_box.SelectedItem.ToString();
+                    launchedItemPath = _currentPath + fileFolder_box.SelectedItem.ToString();
                 }
 
                 HandleFileOrFolder(launchedItemPath);
@@ -239,7 +277,7 @@ namespace Sanity_Archive
         }
 
         private void HandleFileOrFolder(string path)
-        // decides whether the parameter path is file or folder and calls corresponding methods to handle them
+        // decides whether the parameter _path is file or folder and calls corresponding methods to handle them
         {
             FileAttributes attr = File.GetAttributes(@path);
             if ((attr & FileAttributes.Directory) == FileAttributes.Directory)
@@ -260,16 +298,16 @@ namespace Sanity_Archive
                 
             }
 
-            // fill the pathBox with current path
-            path_box.Text = currentPath;
+            // fill the pathBox with current _path
+            path_box.Text = _currentPath;
         }
 
         private void FillFileFolderBox(string path)
-        // Fill fileFolder_box with folder and file items found under the given path
+        // Fill fileFolder_box with folder and file items found under the given _path
         {
             fileFolder_box.Items.Clear();
             DirectoryInfo selectedDirectory = new DirectoryInfo(path);
-            currentPath = selectedDirectory.ToString();
+            _currentPath = selectedDirectory.ToString();
 
             DirectoryInfo[] containedDirs = selectedDirectory.GetDirectories();
             if (new DirectoryInfo(path).Parent != null)
@@ -289,31 +327,20 @@ namespace Sanity_Archive
             fileFolder_box.Items.AddRange(containedFiles);
         }
 
-        #endregion
+        #endregion Directory and File Browser ---------------------------------------------------------------------------------------
 
-        private void search_bttn_Click(object sender, EventArgs e)
-        {
-            Search s = new Search(currentPath);
-            s.Show();
-        }
-
-        private void size_lbl_Click(object sender, EventArgs e)
-        {
-
-        }
-
-#region Copy, Move and Paste
+        #region Copy-Move-Paste -----------------------------------------------------------------------------------------------------
         
         private void copy_button_Click(object sender, EventArgs e)
         {
             PutSelectedItemsInClipboard();
-            dataMovingInPogress = false;
+            _dataMovingInPogress = false;
         }
 
         private void move_button_Click(object sender, EventArgs e)
         {
             PutSelectedItemsInClipboard();
-            dataMovingInPogress = true;
+            _dataMovingInPogress = true;
         }
 
         private void paste_button_Click(object sender, EventArgs e)
@@ -326,8 +353,8 @@ namespace Sanity_Archive
                     try
                     {
                         FileAttributes attr = File.GetAttributes(sourcePath);
-                        if (attr.HasFlag(FileAttributes.Directory)) RelocateFolder(sourcePath, currentPath, dataMovingInPogress);
-                        else RelocateFile(sourcePath, currentPath, dataMovingInPogress);
+                        if (attr.HasFlag(FileAttributes.Directory)) RelocateFolder(sourcePath, _currentPath, _dataMovingInPogress);
+                        else RelocateFile(sourcePath, _currentPath, _dataMovingInPogress);
                     }
                     catch (Exception ex)
                     {
@@ -341,8 +368,8 @@ namespace Sanity_Archive
                 try
                 {
                     FileAttributes attr = File.GetAttributes(sourcePath);
-                    if (attr.HasFlag(FileAttributes.Directory)) RelocateFolder(sourcePath, currentPath, dataMovingInPogress);
-                    else RelocateFile(sourcePath, currentPath, dataMovingInPogress);
+                    if (attr.HasFlag(FileAttributes.Directory)) RelocateFolder(sourcePath, _currentPath, _dataMovingInPogress);
+                    else RelocateFile(sourcePath, _currentPath, _dataMovingInPogress);
                 }
                 catch (Exception ex)
                 {
@@ -350,8 +377,8 @@ namespace Sanity_Archive
                 }
             }
 
-            FillFileFolderBox(currentPath);
-            dataMovingInPogress = false;
+            FillFileFolderBox(_currentPath);
+            _dataMovingInPogress = false;
         }
 
         private void PutSelectedItemsInClipboard()
@@ -359,7 +386,7 @@ namespace Sanity_Archive
             if (fileFolder_box.SelectedItems.Count > 1)
             {
                 StringCollection pathsInClipBoard = new StringCollection();
-                foreach (string path in filePathsInClipBoard)
+                foreach (string path in FilePathsInClipBoard)
                 {
                     pathsInClipBoard.Add(path);
                 }
@@ -367,7 +394,7 @@ namespace Sanity_Archive
             }
             else if (fileFolder_box.SelectedItems.Count == 1)
             {
-                Clipboard.SetText(path);
+                Clipboard.SetText(_path);
             }
             else
             {
@@ -423,19 +450,20 @@ namespace Sanity_Archive
             if (movingNotCopying) folderInClipBoard.Delete(true);
         }
 
-        #endregion
+        #endregion Copy-Move-Paste --------------------------------------------------------------------------------------------------
 
-        #region Attributes handler
+        #region Attributes handler --------------------------------------------------------------------------------------------------
+
         private void attributes_bttn_Click(object sender, EventArgs e)
         {
             if (fileFolder_box.SelectedItems.Count > 1)
             {
-                AttributesDialog attrDialog = new AttributesDialog(filePathsInClipBoard);
+                AttributesDialog attrDialog = new AttributesDialog(FilePathsInClipBoard);
                 attrDialog.ShowDialog();
             }
             else if (fileFolder_box.SelectedItems.Count == 1)
             {
-                string path = currentPath + fileFolder_box.GetItemText(fileFolder_box.SelectedItem);
+                string path = _currentPath + fileFolder_box.GetItemText(fileFolder_box.SelectedItem);
 
                 AttributesDialog attrDialog = new AttributesDialog(path);
                 attrDialog.ShowDialog();
@@ -445,36 +473,10 @@ namespace Sanity_Archive
                 MessageBox.Show("There is nothing to be selected");
             }
         }
-        #endregion
+        #endregion Attributes handler -----------------------------------------------------------------------------------------------
 
-        private void fileFolder_box_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (fileFolder_box.SelectedItems.Count > 1)
-            {
-                filePathsInClipBoard.Clear();
-                foreach (object item in fileFolder_box.SelectedItems)
-                {
-                    string fileName = item.ToString();
-                    filePathsInClipBoard.Add(currentPath + fileName);
-                }
+        #region Calculate Size ------------------------------------------------------------------------------------------------------
 
-            }
-            else if (fileFolder_box.SelectedItems.Count == 1)
-            {
-                path = currentPath + fileFolder_box.GetItemText(fileFolder_box.SelectedItem);
-
-                if (fileFolder_box.SelectedItem.ToString() == "..")
-                {
-                    size_lbl.Text = "0,00 KB";
-                    return;
-                }
-            }
-
-            CalculateSize();
-
-        }
-
-#region Calculate Size
         public void CalculateSize()
         {
             size_lbl.Text = "Loading size. . .";
@@ -482,7 +484,7 @@ namespace Sanity_Archive
             //FOR ONE SELECTED ITEM
             if (fileFolder_box.SelectedItems.Count == 1)
             {
-                FileAttributes attr = File.GetAttributes(path);
+                FileAttributes attr = File.GetAttributes(_path);
                 //CHECK IF DIRECTORY
                 if ((attr & FileAttributes.Directory) == FileAttributes.Directory)
                 {
@@ -491,9 +493,9 @@ namespace Sanity_Archive
                         Thread.CurrentThread.IsBackground = true;
                         try
                         {
-                            if (!path.EndsWith(".."))
+                            if (!_path.EndsWith(".."))
                             {
-                                DirectoryInfo directoryInfo = new DirectoryInfo(path);
+                                DirectoryInfo directoryInfo = new DirectoryInfo(_path);
                                 double dirSize = DirSize(directoryInfo)/1024.0;
                                 RefreshSizeLabel(dirSize);
                             }
@@ -507,9 +509,9 @@ namespace Sanity_Archive
                 }
                 else
                 {
-                    if (!path.EndsWith(".."))
+                    if (!_path.EndsWith(".."))
                     {
-                        double fileSize = new FileInfo(path).Length/1024.0;
+                        double fileSize = new FileInfo(_path).Length/1024.0;
                         RefreshSizeLabel(fileSize);
                     }
                 }
@@ -520,11 +522,11 @@ namespace Sanity_Archive
                 new Thread(() =>
                 {
                     //Thread.CurrentThread.IsBackground = true;
-                    foreach (string filePath in filePathsInClipBoard)
+                    foreach (string filePath in FilePathsInClipBoard)
                     {
-                        FileAttributes attr = File.GetAttributes(path);
+                        FileAttributes attr = File.GetAttributes(_path);
                         //CHECK IF DIRECTORY
-                        if (!path.EndsWith(".."))
+                        if (!_path.EndsWith(".."))
                         {
                             if ((attr & FileAttributes.Directory) == FileAttributes.Directory)
                             {
@@ -552,6 +554,7 @@ namespace Sanity_Archive
             }
             
         }
+
         private long DirSize(DirectoryInfo d)
         {
             long size = 0;
@@ -573,6 +576,7 @@ namespace Sanity_Archive
             catch { size_lbl.Text = "Loading size. . .  something went wrong"; }
             return size;
             }
+
         private void RefreshSizeLabel(double size)
         {
             if (size < 1024) size_lbl.Text = $"{size:F2} KB";
@@ -580,17 +584,17 @@ namespace Sanity_Archive
             else size_lbl.Text = $"{size / 1048576:F2} GB";
         }
 
-        #endregion
+        # endregion Calculate Size --------------------------------------------------------------------------------------------------
 
-        #region Compression/Extract -----------------------------------------------------------------------------------------------------------
+        #region Compression/Decompression -------------------------------------------------------------------------------------------
 
-        #region Compression ------------------------------------------------------------------------------------------------------------------
+        #region Compression ---------------------------------------------------------------------------------------------------------
 
         private void compression_bttn_Click(object sender, EventArgs e)
         {
             try
             {
-                Compress(path, filePathsInClipBoard);
+                Compress(_path, FilePathsInClipBoard);
 
                 if (fileFolder_box.SelectedItems.Count == 1)
                 {
@@ -600,7 +604,7 @@ namespace Sanity_Archive
                 {
                     MessageBox.Show(@"Arhive file successfully created from multiple files!");
                 }
-                FillFileFolderBox(currentPath);
+                FillFileFolderBox(_currentPath);
             }
             catch (DirectoryNotFoundException)
             {
@@ -610,11 +614,11 @@ namespace Sanity_Archive
 
         private void Compress(string singlePath, List<string> pathsList)
         {
-            string dirParentPath = "";
-            string dirParent = "";
+            string dirParentPath = String.Empty;
+            string dirParent = String.Empty;
             int i = 0;
 
-            //In case of single selecting. ----------------------------------------------------------------------------------------------
+            //In case of single selecting. ------------------------------------------------------------------------------------------
 
             if (fileFolder_box.SelectedItems.Count == 1)
             {
@@ -641,7 +645,7 @@ namespace Sanity_Archive
                 }
             }
 
-            //In case of multiple selecting. ---------------------------------------------------------------------------------------------------
+            //In case of multiple selecting. ----------------------------------------------------------------------------------------
 
             if (fileFolder_box.SelectedItems.Count > 1)
             {
@@ -674,7 +678,7 @@ namespace Sanity_Archive
                 }
             }
 
-            //In case of selection is ZERO. ---------------------------------------------------------------------------------------
+            //In case of selection is ZERO. -----------------------------------------------------------------------------------------
 
             if (fileFolder_box.SelectedItems.Count == 0)
             {
@@ -682,15 +686,15 @@ namespace Sanity_Archive
             }
         }
 
-        #endregion Compression ---------------------------------------------------------------------------------------------------------------
+        #endregion Compression ------------------------------------------------------------------------------------------------------
 
-        #region Decompression/Extract ------------------------------------------------------------------------------------------------------
+        #region Decompression/Extract -----------------------------------------------------------------------------------------------
 
         private void exctract_bttn_Click(object sender, EventArgs e)
         {
             try
             {
-                Decompression(path, filePathsInClipBoard);
+                Decompression(_path, FilePathsInClipBoard);
 
                 if (fileFolder_box.SelectedItems.Count == 1)
                 {
@@ -700,7 +704,7 @@ namespace Sanity_Archive
                 {
                     MessageBox.Show(@"File(s) has been extracted to separate folders.");
                 }
-                FillFileFolderBox(currentPath);
+                FillFileFolderBox(_currentPath);
             }
             catch (Exception)
             {
@@ -712,7 +716,7 @@ namespace Sanity_Archive
         {
             string zipExtractionPath = "";
 
-            //In case of single selecting. ----------------------------------------------------------------------------------------------
+            //In case of single selecting. ------------------------------------------------------------------------------------------
 
             if (fileFolder_box.SelectedItems.Count == 1)
             {
@@ -733,7 +737,7 @@ namespace Sanity_Archive
                 }
             }
 
-            //In case of multiple selecting. ---------------------------------------------------------------------------------------------------
+            //In case of multiple selecting. ----------------------------------------------------------------------------------------
 
             if (fileFolder_box.SelectedItems.Count > 1)
             {
@@ -761,7 +765,7 @@ namespace Sanity_Archive
                 }
             }
 
-            //In case of selection is ZERO. ---------------------------------------------------------------------------------------
+            //In case of selection is ZERO. -----------------------------------------------------------------------------------------
 
             if (fileFolder_box.SelectedItems.Count == 0)
             {
@@ -769,8 +773,10 @@ namespace Sanity_Archive
             }
         }
 
-        #endregion Decompression/Extract ------------------------------------------------------------------------------------------------------
+        #endregion Decompression/Extract --------------------------------------------------------------------------------------------
 
-        #endregion Compression/Extract --------------------------------------------------------------------------------------------------------
+        #endregion Compression/Decompression ----------------------------------------------------------------------------------------
     }
+
+
 }

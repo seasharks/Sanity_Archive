@@ -130,7 +130,6 @@
             this.size_lbl.Size = new System.Drawing.Size(38, 13);
             this.size_lbl.TabIndex = 7;
             this.size_lbl.Text = "0.0 kB";
-            this.size_lbl.Click += new System.EventHandler(this.size_lbl_Click);
             // 
             // path_box
             // 
